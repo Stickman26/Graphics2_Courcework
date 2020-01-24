@@ -38,10 +38,18 @@
 //	10+) see instructions in passTexcoord...vs4x.glsl for information on 
 //		how to handle the texture coordinate
 
+uniform mat4 uMV;
+uniform mat4 uP;
+
 layout (location = 0) in vec4 aPosition;
+layout (location = 2) in vec4 aNormal;
+
+out vec4 viewPos;
 
 void main()
 {
+	viewPos = uMV * aPosition;
+
 	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+	gl_Position = uP * viewPos;
 }
