@@ -33,6 +33,7 @@
 
 #define max_lightct 4
 
+uniform sampler2D uTex_dm;
 uniform sampler2D uTex_sm;
 uniform vec4 uLightPos[max_lightct];
 uniform vec4 uLightCol[max_lightct];
@@ -59,13 +60,12 @@ vec4 phongLightClump()
 		monoLight = normalize(monoLight);
 		dotVal = max(0.0, dot(normalize(outNorm), monoLight));
 
-		reflection = 2 * max(0.0, dot(normalize(outNorm), monoLight)) * normalize(outNorm) - monoLight;
+		reflection = 2.0 * max(0.0, dot(normalize(outNorm), monoLight)) * normalize(outNorm) - monoLight;
 
-		specular = pow(max(dot(normalize(viewPos), reflection), 0.0), 32.0);
+		specular = pow(max(dot(-normalize(viewPos), reflection), 0.0), 32.0);
 
-		lightSum += dotVal * textureProj(uTex_sm, lightTextCoord) * uLightCol[i];
+		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord) * uLightCol[i];
 		lightSum += specular * textureProj(uTex_sm, lightTextCoord) * uLightCol[i];
-		lightSum += vec4(0.1,0.1,0.1,0.1);
 	}
 
 	return lightSum;
@@ -74,5 +74,5 @@ vec4 phongLightClump()
 
 void main()
 {
-	rtFragColor = vec4(0.0,1.0,0.0,1.0);//phongLightClump();
+	rtFragColor = phongLightClump();
 }
