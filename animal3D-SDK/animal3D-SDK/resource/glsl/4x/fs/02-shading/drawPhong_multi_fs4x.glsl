@@ -31,10 +31,48 @@
 //	4) implement Phong shading model
 //	Note: test all data and inbound values before using them!
 
+#define max_lightct 4
+
+uniform sampler2D uTex_sm;
+uniform vec4 uLightPos[max_lightct];
+uniform vec4 uLightCol[max_lightct];
+uniform int uLightCt;
+
+in vec4 lightTextCoord;
+in vec4 outNorm;
+in vec4 viewPos;
+
 out vec4 rtFragColor;
+
+vec4 phongLightClump()
+{
+	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 reflection = vec4(0.0,0.0,0.0,0.0);
+	float specular;
+
+	vec4 monoLight;
+	float dotVal;
+
+	for (int i = 0; i < uLightCt; ++i)
+	{
+		monoLight = uLightPos[i] - viewPos;
+		monoLight = normalize(monoLight);
+		dotVal = max(0.0, dot(normalize(outNorm), monoLight));
+
+		reflection = 2 * max(0.0, dot(normalize(outNorm), monoLight)) * normalize(outNorm) - monoLight;
+
+		specular = pow(max(dot(normalize(viewPos), reflection), 0.0), 32.0);
+
+		lightSum += dotVal * textureProj(uTex_sm, lightTextCoord) * uLightCol[i];
+		lightSum += specular * textureProj(uTex_sm, lightTextCoord) * uLightCol[i];
+		lightSum += vec4(0.1,0.1,0.1,0.1);
+	}
+
+	return lightSum;
+}
+
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+	rtFragColor = vec4(0.0,1.0,0.0,1.0);//phongLightClump();
 }

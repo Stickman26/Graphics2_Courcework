@@ -55,7 +55,7 @@ void main()
 {
 	viewPos = uMV * aPosition;
 
-	outNorm = normalize(uMV_nrm * aNormal);
+	outNorm = uMV_nrm * aNormal;
 
 	//Might need to be the output from passTexCoord
 	lightTextCoord = uAtlas * textureCoord;

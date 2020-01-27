@@ -31,9 +31,11 @@
 //	4) implement Lambert shading model
 //	Note: test all data and inbound values before using them!
 
+#define max_lightct 4
+
 uniform sampler2D uTex_dm;
-uniform vec4[] uLightPos;
-uniform vec4[] uLightCol;
+uniform vec4 uLightPos[max_lightct];
+uniform vec4 uLightCol[max_lightct];
 uniform int uLightCt;
 
 in vec4 lightTextCoord;
@@ -52,8 +54,8 @@ vec4 lambertLightClump()
 	{
 		monoLight = uLightPos[i] - viewPos;
 		monoLight = normalize(monoLight);
-		dotVal = max(0.0, dot(outNorm, monoLight));
-		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord);
+		dotVal = max(0.0, dot(normalize(outNorm), monoLight));
+		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord) * uLightCol[i];
 	}
 
 
@@ -66,11 +68,10 @@ void main()
 
 	rtFragColor = lambertLightClump();
 
-
 	//DEBUGGING	
 	//rtFragColor = lightTextCoord;
 	//rtFragColor = outNorm;
 	//rtFragColor = viewPos;
-	//rtFragColor = uLightCol[0];
+	//rtFragColor = uLightCol[3];
 }
 
