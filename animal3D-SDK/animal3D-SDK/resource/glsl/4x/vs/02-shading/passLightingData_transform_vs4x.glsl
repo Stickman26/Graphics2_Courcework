@@ -40,16 +40,25 @@
 
 uniform mat4 uMV;
 uniform mat4 uP;
+uniform mat4 uMV_nrm;
+uniform mat4 uAtlas;
 
 layout (location = 0) in vec4 aPosition;
 layout (location = 2) in vec4 aNormal;
+layout (location = 8) in vec4 textureCoord;
 
 out vec4 viewPos;
+out vec4 outNorm;
+out vec4 lightTextCoord;
 
 void main()
 {
 	viewPos = uMV * aPosition;
 
-	// DUMMY OUTPUT: directly assign input position to output position
+	outNorm = normalize(uMV_nrm * aNormal);
+
+	//Might need to be the output from passTexCoord
+	lightTextCoord = uAtlas * textureCoord;
+
 	gl_Position = uP * viewPos;
 }

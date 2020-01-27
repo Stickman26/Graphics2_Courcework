@@ -31,10 +31,46 @@
 //	4) implement Lambert shading model
 //	Note: test all data and inbound values before using them!
 
+uniform sampler2D uTex_dm;
+uniform vec4[] uLightPos;
+uniform vec4[] uLightCol;
+uniform int uLightCt;
+
+in vec4 lightTextCoord;
+in vec4 outNorm;
+in vec4 viewPos;
+
 out vec4 rtFragColor;
+
+vec4 lambertLightClump()
+{
+	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 monoLight;
+	float dotVal;
+
+	for (int i = 0; i < uLightCt; ++i)
+	{
+		monoLight = uLightPos[i] - viewPos;
+		monoLight = normalize(monoLight);
+		dotVal = max(0.0, dot(outNorm, monoLight));
+		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord);
+	}
+
+
+
+	return lightSum;
+}
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE RED
-	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+	rtFragColor = lambertLightClump();
+
+
+	//DEBUGGING	
+	//rtFragColor = lightTextCoord;
+	//rtFragColor = outNorm;
+	//rtFragColor = viewPos;
+	//rtFragColor = uLightCol[0];
 }
+
