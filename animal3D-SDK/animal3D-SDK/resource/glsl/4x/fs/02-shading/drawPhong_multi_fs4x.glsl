@@ -53,6 +53,8 @@ vec4 phongLightClump()
 
 	vec4 monoLight;
 	float dotVal;
+	vec4 normNorm = normalize(outNorm);
+	vec4 viewVec = -normalize(viewPos);
 
 	for (int i = 0; i < uLightCt; ++i)
 	{
@@ -60,9 +62,15 @@ vec4 phongLightClump()
 		monoLight = normalize(monoLight);
 		dotVal = max(0.0, dot(normalize(outNorm), monoLight));
 
-		reflection = 2.0 * max(0.0, dot(normalize(outNorm), monoLight)) * normalize(outNorm) - monoLight;
+		reflection = 2.0 * max(0.0, dot(normNorm, monoLight)) * normNorm - monoLight;
 
-		specular = pow(max(dot(-normalize(viewPos), reflection), 0.0), 32.0);
+		specular = max(dot(viewVec, reflection), 0.0);
+		//power 32
+		specular *= specular; //2
+		specular *= specular; //4
+		specular *= specular; //8
+		specular *= specular; //16
+		specular *= specular; //32
 
 		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord) * uLightCol[i];
 		lightSum += specular * textureProj(uTex_sm, lightTextCoord) * uLightCol[i];

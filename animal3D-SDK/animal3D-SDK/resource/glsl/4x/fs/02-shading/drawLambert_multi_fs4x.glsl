@@ -49,18 +49,19 @@ vec4 lambertLightClump()
 	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
 	vec4 monoLight;
 	float dotVal;
+	vec4 normNorm = normalize(outNorm);
 
 	for (int i = 0; i < uLightCt; ++i)
 	{
 		monoLight = uLightPos[i] - viewPos;
 		monoLight = normalize(monoLight);
-		dotVal = max(0.0, dot(normalize(outNorm), monoLight));
-		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord) * uLightCol[i];
+		dotVal = max(0.0, dot(normNorm, monoLight));
+		lightSum += dotVal * uLightCol[i];
 	}
 
 
 
-	return lightSum;
+	return lightSum * textureProj(uTex_dm, lightTextCoord);
 }
 
 void main()
