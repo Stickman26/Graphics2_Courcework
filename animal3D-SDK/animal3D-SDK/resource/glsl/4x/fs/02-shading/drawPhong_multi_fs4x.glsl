@@ -37,4 +37,21 @@ void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
 	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+	/*
+	//NOT REAL CODE
+	kd = max(0.0, dot(...));
+	vec2 rampCoord = vec2(kd, 0.0);
+	vec4 finalDiffuseLighting = texture(uTex_dm_ramp, rampCoord);
+
+	//pow replacement
+	ks = max(0.0,dot(...));
+	ks *= ks; //ks^2
+	ks *= ks; //ks^4
+	ks *= ks; //ks^8
+	ks *= ks; //ks^16
+	ks *= ks; //ks^32
+	ks *= ks; //ks^64
+	ks *= ks; //ks^128
+	*/
 }
