@@ -57,7 +57,6 @@ void main()
 
 	outNorm = uMV_nrm * aNormal;
 
-	//Might need to be the output from passTexCoord
 	lightTextCoord = uAtlas * textureCoord;
 
 	gl_Position = uP * viewPos;

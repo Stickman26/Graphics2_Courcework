@@ -33,10 +33,50 @@
 //	5) set location of final color render target (location 0)
 //	6) declare render targets for each attribute and shading component
 
-out vec4 rtFragColor;
+#define max_lightct 4
+
+uniform sampler2D uTex_dm;
+uniform vec4 uLightPos[max_lightct];
+uniform vec4 uLightCol[max_lightct];
+uniform int uLightCt;
+
+in vec4 lightTextCoord;
+in vec4 outNorm;
+in vec4 viewPos;
+
+layout (location = 0) out vec4 vLambert;
+layout (location = 1) out vec4 vViewPos;
+layout (location = 2) out vec4 vViewNorm;
+layout (location = 3) out vec4 vTextCoordr;
+layout (location = 4) out vec4 vDiffuseM;
+layout (location = 6) out vec4 vDiffuseT;
+
+//out vec4 rtFragColor;
+
+vec4 lambertLightClump()
+{
+	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 monoLight;
+	float dotVal;
+	vec4 normNorm = normalize(outNorm);
+
+	for (int i = 0; i < uLightCt; ++i)
+	{
+		monoLight = uLightPos[i] - viewPos;
+		monoLight = normalize(monoLight);
+		dotVal = max(0.0, dot(normNorm, monoLight));
+		lightSum += dotVal * uLightCol[i];
+	}
+
+	return lightSum;
+}
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE RED
-	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	vLambert = lambertLightClump() * textureProj(uTex_dm, lightTextCoord);
+	vViewPos = viewPos;
+	vViewNorm = normalize(outNorm);
+	vTextCoordr = lightTextCoord;
+	vDiffuseM = textureProj(uTex_dm, lightTextCoord);
+	vDiffuseT = lambertLightClump();
 }

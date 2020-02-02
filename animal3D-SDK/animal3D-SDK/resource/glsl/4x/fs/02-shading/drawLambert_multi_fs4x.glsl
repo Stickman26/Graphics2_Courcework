@@ -59,19 +59,17 @@ vec4 lambertLightClump()
 		lightSum += dotVal * uLightCol[i];
 	}
 
-
-
-	return lightSum * textureProj(uTex_dm, lightTextCoord);
+	return lightSum;
 }
 
 void main()
 {
 
-	rtFragColor = lambertLightClump();
+	rtFragColor = lambertLightClump() * textureProj(uTex_dm, lightTextCoord);
 
 	//DEBUGGING	
 	//rtFragColor = lightTextCoord;
-	//rtFragColor = outNorm;
+	//rtFragColor = normalize(outNorm);
 	//rtFragColor = viewPos;
 	//rtFragColor = uLightCol[3];
 }
