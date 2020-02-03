@@ -55,7 +55,7 @@ layout (location = 6) out vec4 vDiffuseT;
 
 vec4 lambertLightClump()
 {
-	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 lightSum = vec4 (0.0,0.0,0.0,1.0);
 	vec4 monoLight;
 	float dotVal;
 	vec4 normNorm = normalize(outNorm);
@@ -75,7 +75,7 @@ void main()
 {
 	vLambert = lambertLightClump() * textureProj(uTex_dm, lightTextCoord);
 	vViewPos = viewPos;
-	vViewNorm = normalize(outNorm);
+	vViewNorm = normalize(outNorm) + vec4(0.0,0.0,0.0,1.0);
 	vTextCoordr = lightTextCoord;
 	vDiffuseM = textureProj(uTex_dm, lightTextCoord);
 	vDiffuseT = lambertLightClump();

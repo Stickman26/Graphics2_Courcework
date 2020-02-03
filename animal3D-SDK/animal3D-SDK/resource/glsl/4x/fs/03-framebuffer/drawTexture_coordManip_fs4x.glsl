@@ -31,10 +31,25 @@
 //	4) sample texture using modified texture coordinate
 //	5) assign sample to output color
 
+uniform sampler2D uTex_dm;
+uniform double uTime;
+
+in vec4 textureCoordOut;
+
 out vec4 rtFragColor;
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE DARK GREY
-	rtFragColor = vec4(0.2, 0.2, 0.2, 1.0);
+
+	//textureCoordOut.x = textureCoordOut.x;
+	//textureCoordOut.y += 1.0;
+
+	vec4 tcmod = textureCoordOut;
+
+	tcmod.x += sin(20.0 * tcmod.x + 500.0 * tcmod.y + 3.0 * float(uTime)) * .05;
+	tcmod.y += sin(tcmod.x + 500.0 * tcmod.y + 6.0 * float(uTime)) * .05;
+	
+	vec4 texture = textureProj(uTex_dm, tcmod);
+
+	rtFragColor = texture;
 }

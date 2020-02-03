@@ -53,7 +53,7 @@ vec4 diffuseSum;
 
 layout (location = 0) out vec4 vPhong;
 layout (location = 1) out vec4 vViewPos;
-layout (location = 2) out vec4 vViewNorm;
+layout (location = 2) out vec4 vViewNormal;
 layout (location = 3) out vec4 vTextCoordr;
 layout (location = 4) out vec4 vDiffuseM;
 layout (location = 5) out vec4 vSpecularM;
@@ -62,7 +62,7 @@ layout (location = 7) out vec4 vSpecularT;
 
 vec4 phongLightClump()
 {
-	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 lightSum = vec4 (0.0,0.0,0.0,1.0);
 	vec4 reflection = vec4(0.0,0.0,0.0,0.0);
 	float specular;
 
@@ -96,7 +96,7 @@ vec4 phongLightClump()
 
 vec4 phongDiffuse()
 {
-	vec4 diffuseSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 diffuseSum = vec4 (0.0,0.0,0.0,1.0);
 
 	vec4 monoLight;
 	float dotVal;
@@ -152,7 +152,7 @@ void main()
 {
 	vPhong = phongLightClump();
 	vViewPos = viewPos;
-	vViewNorm = normalize(outNorm);
+	vViewNormal = normalize(outNorm) + vec4(0.0,0.0,0.0,1.0);
 	vTextCoordr = lightTextCoord;
 	vDiffuseM = textureProj(uTex_dm, lightTextCoord);
 	vSpecularM = textureProj(uTex_sm, lightTextCoord);
