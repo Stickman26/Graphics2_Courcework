@@ -32,10 +32,32 @@
 //	2) declare varying for shadow coordinate
 //	3) calculate and pass shadow coordinate
 
+uniform mat4 uMVPB;
+uniform mat4 uMV;
+uniform mat4 uP;
+uniform mat4 uMV_nrm;
+uniform mat4 uAtlas;
+
 layout (location = 0) in vec4 aPosition;
+layout (location = 2) in vec4 aNormal;
+layout (location = 8) in vec4 textureCoord;
+
+out vec4 viewPos;
+out vec4 outNorm;
+out vec4 lightTextCoord;
+out vec4 shadowCoord;
 
 void main()
 {
-	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+	viewPos = uMV * aPosition;
+
+	outNorm = uMV_nrm * aNormal;
+
+	lightTextCoord = uAtlas * textureCoord;
+
+	shadowCoord = uMVPB * aPosition;
+
+	gl_Position = uP * viewPos;
+
+
 }
