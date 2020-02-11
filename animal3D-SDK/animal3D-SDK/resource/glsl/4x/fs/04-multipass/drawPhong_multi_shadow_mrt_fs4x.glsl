@@ -50,14 +50,6 @@ out vec4 rtFragColor;
 
 vec4 phongLightClump()
 {
-	//Shadow Data
-	//vec4 projScre = shadowCoord / shadowCoord.w;
-
-	//float shadowSample = textureProj(uTex_shadow, projScre).r;
-
-	//bool fragIsShadow = (projScre.z > (shadowSample + 0.0025));
-
-
 	//Phong
 	vec4 lightSum = vec4 (0.0,0.0,0.0,1.0);
 	vec4 reflection = vec4(0.0,0.0,0.0,0.0);
@@ -83,14 +75,6 @@ vec4 phongLightClump()
 		specular *= specular; //8
 		specular *= specular; //16
 		specular *= specular; //32
-		
-		//Shadow Modification
-		//vec4 shadowCol = uLightCol[i];
-
-		//if (fragIsShadow) 
-		//{
-			//shadowCol *= 0.2;
-		//}
 
 		lightSum += dotVal * textureProj(uTex_dm, lightTextCoord) * uLightCol[i];
 		lightSum += specular * textureProj(uTex_sm, lightTextCoord) * uLightCol[i];

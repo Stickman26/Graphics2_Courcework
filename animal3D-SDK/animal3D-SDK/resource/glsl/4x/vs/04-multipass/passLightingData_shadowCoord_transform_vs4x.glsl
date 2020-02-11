@@ -32,7 +32,7 @@
 //	2) declare varying for shadow coordinate
 //	3) calculate and pass shadow coordinate
 
-uniform mat4 uMVPB;
+uniform mat4 uMVPB_other;
 uniform mat4 uMV;
 uniform mat4 uP;
 uniform mat4 uMV_nrm;
@@ -55,7 +55,7 @@ void main()
 
 	lightTextCoord = uAtlas * textureCoord;
 
-	shadowCoord = uMVPB * aPosition;
+	shadowCoord = uMVPB_other * aPosition;
 
 	gl_Position = uP * viewPos;
 
