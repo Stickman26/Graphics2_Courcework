@@ -34,6 +34,22 @@ uniform sampler2D uImage00;
 
 layout (location = 0) out vec4 rtFragColor;
 
+vec4 blurGaussian0(in sampler2D img, in vec2 center, in vec2 dir)
+{
+	return texture(img,center);
+}
+
+vec4 blurGaussian2(in sampler2D img, in vec2 center, in vec2 dir)
+{
+	vec4 c = vec4(0.0);
+	c += texture(img,center) * 2.0;
+	c += texture(img, center + dir);
+	c += texture(img, center - dir);
+	//return (c/4.0);
+	return (c * 0.25);
+
+}
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE MAGENTA
