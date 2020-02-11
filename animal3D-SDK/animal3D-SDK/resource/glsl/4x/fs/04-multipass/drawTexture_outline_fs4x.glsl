@@ -30,10 +30,12 @@
 
 uniform sampler2D uTex_dm;
 uniform sampler2D uTex_sm;
+uniform sampler2D uImage1;
+uniform sampler2D uImage2;
 
 //Toon outline
-uniform double uSize; //pixel size actual
-uniform double uAxis; //thickness
+uniform vec2 uSize; //pixel size actual
+uniform vec2 uAxis; //thickness
 uniform vec4 uColor; //color of line
 
 in vec4 textureCoordOut;
@@ -55,7 +57,7 @@ mat3 sy = mat3(
 
 void main()
 {
-	vec3 vTexture = textureProj(uTex_dm, textureCoordOut).rgb;	
+	vec4 vTexture = textureProj(uTex_dm, textureCoordOut);	
 	
 	mat3 storage;
 
@@ -63,10 +65,12 @@ void main()
 	{
 		for (int y = 0 ; y < 3 ; ++y)
 		{
-			vec3 simple = texelFetch(uTex_sm, ivec2(gl_FragCoord) + ivec2(x-1,y-1),0).rgb;
+			vec3 simple = texelFetch(uImage2, ivec2(gl_FragCoord) + ivec2(x-1,y-1),0).rgb;
 			storage[x][y] = length(simple);
 		}
 	}
+
+	
 
 	float gx = dot(sx[0], storage[0]) + dot(sx[1], storage[1]) + dot(sx[2], storage[2]);
 	float gy = dot(sy[0], storage[0]) + dot(sy[1], storage[1]) + dot(sy[2], storage[2]);
@@ -76,5 +80,7 @@ void main()
 
 	float g = sqrt(gx + gy);
 
-	rtFragColor = vec4(vTexture - vec3(g), 1.0);
+
+	rtFragColor = vTexture * vec4(vec3(1-g), 1.0);
+	
 }
