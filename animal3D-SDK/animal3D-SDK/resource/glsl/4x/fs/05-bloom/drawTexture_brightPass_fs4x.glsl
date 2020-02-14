@@ -31,6 +31,8 @@
 
 uniform sampler2D uImage00;
 
+in vec4 textureCoordOut;
+	
 layout (location = 0) out vec4 rtFragColor;
 
 //(1)
@@ -41,6 +43,12 @@ float relativeLuminance(vec3 c)
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE CYAN
-	rtFragColor = vec4(0.0, 1.0, 1.0, 1.0);
+	vec3 vTexture = textureProj(uImage00, textureCoordOut).rgb;
+	float loomyBoi = relativeLuminance(vTexture);
+
+	vec3 loomyVec3 = vec3(loomyBoi);
+
+	vec3 brightLad = loomyVec3 / (1.0f + loomyVec3);
+	
+	rtFragColor = vec4(vTexture * brightLad, 1.0);
 }
