@@ -31,10 +31,25 @@
 //	4) modify sample in some creative way
 //	5) assign modified sample to output color
 
+uniform sampler2D uTex_dm;
+uniform double uTime;
+
+in vec4 textureCoordOut;
+
 out vec4 rtFragColor;
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE LIGHT GREY
-	rtFragColor = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 texture = textureProj(uTex_dm, textureCoordOut);
+
+	vec4 holder = texture;
+
+	float sinTime = sin(float(uTime));
+	float cosTime = cos(float(uTime));
+
+	texture.x = sinTime * holder.x + cosTime * holder.y;
+	texture.y = sinTime * holder.y + cosTime * holder.z;
+	texture.z = sinTime * holder.z + cosTime * holder.x;
+
+	rtFragColor = texture;
 }

@@ -28,10 +28,59 @@
 //	0) copy existing texturing shader
 //	1) implement outline algorithm - see render code for uniform hints
 
+uniform sampler2D uTex_dm;
+uniform sampler2D uTex_sm;
+uniform sampler2D uImage1;
+uniform sampler2D uImage2;
+
+//Toon outline
+uniform vec2 uSize; //pixel size actual
+uniform vec2 uAxis; //thickness
+uniform vec4 uColor; //color of line
+
+in vec4 textureCoordOut;
+
 out vec4 rtFragColor;
+
+//Sobel Operator: https://computergraphics.stackexchange.com/questions/3646/opengl-glsl-sobel-edge-detection-filter
+mat3 sx = mat3(
+	1.0, 2.0, 1.0,
+	0.0, 0.0, 0.0,
+	-1.0, -2.0, -1.0
+);
+
+mat3 sy = mat3(
+	1.0, 0.0, -1.0,
+	2.0, 0.0, -2.0,
+	1.0, 0.0, -1.0
+);
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE DARK GREY
-	rtFragColor = vec4(0.2, 0.2, 0.2, 1.0);
+	vec4 vTexture = textureProj(uTex_dm, textureCoordOut);	
+	
+	mat3 storage;
+
+	for (int x = 0 ; x < 3 ; ++x)
+	{
+		for (int y = 0 ; y < 3 ; ++y)
+		{
+			vec3 simple = texelFetch(uImage2, ivec2(gl_FragCoord) + ivec2(x-1,y-1),0).rgb;
+			storage[x][y] = length(simple);
+		}
+	}
+
+	
+
+	float gx = dot(sx[0], storage[0]) + dot(sx[1], storage[1]) + dot(sx[2], storage[2]);
+	float gy = dot(sy[0], storage[0]) + dot(sy[1], storage[1]) + dot(sy[2], storage[2]);
+
+	gx *= gx;
+	gy *= gy;
+
+	float g = sqrt(gx + gy);
+
+
+	rtFragColor = vTexture * vec4(vec3(1-g), 1.0);
+	
 }
