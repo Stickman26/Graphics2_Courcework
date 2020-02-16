@@ -46,9 +46,11 @@ void main()
 	vec3 vTexture = textureProj(uImage00, textureCoordOut).rgb;
 	float loomyBoi = relativeLuminance(vTexture);
 
-	vec3 loomyVec3 = vec3(loomyBoi);
+	vec3 brightLad = vTexture / (vTexture + vec3(1.0));
 
-	vec3 brightLad = loomyVec3 / (1.0f + loomyVec3);
+	//vec3 brightLad = vec3(1.0) - exp(-vTexture * 1.0);
+
+	brightLad = pow(brightLad, vec3(1.0 / loomyBoi));
 	
-	rtFragColor = vec4(vTexture * brightLad, 1.0);
+	rtFragColor = vec4(brightLad, 1.0);
 }
