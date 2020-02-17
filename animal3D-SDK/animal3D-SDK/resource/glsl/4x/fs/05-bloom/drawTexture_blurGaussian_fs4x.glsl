@@ -32,6 +32,7 @@
 
 uniform sampler2D uImage00;
 uniform vec2 uAxis;
+uniform vec2 uSize;
 
 in vec4 textureCoordOut;
 
@@ -66,5 +67,5 @@ vec4 blurGaussian4(in sampler2D img, in vec2 center, in vec2 dir)
 
 void main()
 {
-	rtFragColor = blurGaussian4(uImage00, textureCoordOut.xy, uAxis);
+	rtFragColor = blurGaussian4(uImage00, textureCoordOut.xy, uAxis * uSize);
 }

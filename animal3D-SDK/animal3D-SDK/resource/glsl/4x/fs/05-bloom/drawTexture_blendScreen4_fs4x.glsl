@@ -31,14 +31,30 @@
 //	3) use screen function to sample input textures
 
 uniform sampler2D uImage00;
+uniform sampler2D uImage01;
+uniform sampler2D uImage02;
+uniform sampler2D uImage03;
 
 in vec4 textureCoordOut;
+
+//4x Inputs?
+//Other Images?
+
+//Screen Function
+vec4 screen(vec4 A, vec4 B, vec4 C, vec4 D)
+{
+	return 1.0 - ((1.0 - A) * (1.0 - B) * (1.0 - C) * (1.0 - D));
+}
 
 out vec4 rtFragColor;
 
 void main()
 {
 	// fragments set based on texture
-	vec4 vTexture = textureProj(uImage00, textureCoordOut);
-	rtFragColor = vTexture;
+	vec4 img0 = textureProj(uImage00, textureCoordOut);
+	vec4 img1 = textureProj(uImage01, textureCoordOut);
+	vec4 img2 = textureProj(uImage02, textureCoordOut);
+	vec4 img3 = textureProj(uImage03, textureCoordOut);
+	
+	rtFragColor = screen(img0,img1,img2,img3);
 }
