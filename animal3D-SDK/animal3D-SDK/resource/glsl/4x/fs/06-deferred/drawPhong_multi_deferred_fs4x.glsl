@@ -30,7 +30,7 @@
 // ****TO-DO: 
 //	0) copy original forward Phong shader
 //	1) declare g-buffer textures as uniform samplers
-//	2) declare light data as uniform block
+//	2) declare light data as uniform block  same lighting as forward
 //	3) replace geometric information normally received from fragment shader 
 //		with samples from respective g-buffer textures; use to compute lighting
 //			-> position calculated using reverse perspective divide; requires 
@@ -38,7 +38,12 @@
 //			-> normal calculated by expanding range of normal sample
 //			-> surface texture coordinate is used as-is once sampled
 
+uniform vec4 uLightPos[MAX_LIGHTS];
+uniform vec4 uLightCol[MAX_LIGHTS];
+uniform int uLightCt;
+
 in vec4 vTexcoord;
+
 
 layout (location = 0) out vec4 rtFragColor;
 layout (location = 4) out vec4 rtDiffuseMapSample;
