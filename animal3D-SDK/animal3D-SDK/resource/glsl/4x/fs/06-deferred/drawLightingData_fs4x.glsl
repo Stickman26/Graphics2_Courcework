@@ -47,7 +47,7 @@ void main()
 
 	
 	// DUMMY OUTPUT: all fragments are OPAQUE RED, GREEN AND BLUE
-	rtViewPosition = vViewPosition;
-	rtViewNormal = normalize(vViewNormal);
+	rtViewPosition = vBiasedClipCoord / vBiasedClipCoord.w;
+	rtViewNormal = (vViewNormal * 0.5) + 0.5;
 	rtAtlasTexcoord = vTexcoord;
 }
