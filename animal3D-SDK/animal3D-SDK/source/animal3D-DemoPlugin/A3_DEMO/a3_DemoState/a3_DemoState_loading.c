@@ -681,7 +681,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-volume-inst");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passBiasedClipCoord_transform_instanced_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhongVolume_fs->shader);
-	*/
+	//*/
 	// ****TO-DO: 
 	//	-> 5.1a: uncomment deferred lighting composite program
 	/*
@@ -792,7 +792,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 		a3bufferCreate(demoState->ubo_transformMVPB_light + i, "ubo:transform-mvpb", a3buffer_uniform, a3index_countMaxShort, 0);
 		a3bufferCreate(demoState->ubo_pointLight + i, "ubo:pointlight", a3buffer_uniform, a3index_countMaxShort, 0);
 	}
-	*/
+	//*/
 
 
 	printf("\n\n---------------- LOAD SHADERS FINISHED ---------------- \n");
