@@ -58,7 +58,7 @@ layout (location = 4) out vec4 rtDiffuseMapSample;
 layout (location = 5) out vec4 rtSpecularMapSample;
 layout (location = 6) out vec4 rtDiffuseLightTotal;
 layout (location = 7) out vec4 rtSpecularLightTotal;
-
+/*
 vec4 phongLightClump()
 {
 	vec4 lightSum = vec4 (0.0,0.0,0.0,1.0);
@@ -146,7 +146,7 @@ vec4 phongSpecular()
 
 	return specularSum;
 }
-
+*/
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE CYAN (and others)
