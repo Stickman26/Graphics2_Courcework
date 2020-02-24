@@ -71,9 +71,10 @@ vec4 phongDiffuse()
 	vec4 diffuseSum = vec4 (0.0,0.0,0.0,1.0);
 
 	//Convert Images to vec4 data
-	vec4 viewPos = texture(uImage01, vBiasedClipCoord.xy);
+	vec4 viewPos = texture(uImage01,vBiasedClipCoord.xy);
+	viewPos = viewPos + uLight[vInstanceID].viewPos;
 	viewPos = uPB_inv * viewPos;
-	viewPos = viewPos / viewPos.w;
+	viewPos = viewPos/viewPos.w;
 	vec4 norm = texture(uImage02, vBiasedClipCoord.xy);
 
 	vec4 monoLight;
@@ -98,9 +99,10 @@ vec4 phongSpecular()
 	float specular;
 
 	//Convert Images to vec4 data
-	vec4 viewPos = texture(uImage01, vBiasedClipCoord.xy);
+	vec4 viewPos = texture(uImage01,vBiasedClipCoord.xy);
+	viewPos = viewPos + uLight[vInstanceID].viewPos;
 	viewPos = uPB_inv * viewPos;
-	viewPos = viewPos / viewPos.w;
+	viewPos = viewPos/viewPos.w;
 	vec4 norm = texture(uImage02, vBiasedClipCoord.xy);
 
 	vec4 monoLight;
