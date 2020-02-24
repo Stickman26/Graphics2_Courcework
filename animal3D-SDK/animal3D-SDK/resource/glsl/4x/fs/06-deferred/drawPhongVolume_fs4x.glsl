@@ -66,13 +66,13 @@ layout (location = 6) out vec4 rtDiffuseLight;
 layout (location = 7) out vec4 rtSpecularLight;
 
 
-vec4 phongDiffuse()
+vec4 phongDiffuse(int i)
 {
 	vec4 diffuseSum = vec4 (0.0,0.0,0.0,1.0);
 
 	//Convert Images to vec4 data
 	vec4 viewPos = texture(uImage01,vBiasedClipCoord.xy);
-	viewPos = viewPos + uLight[vInstanceID].viewPos;
+	viewPos = viewPos + uLight[i].viewPos;
 	viewPos = uPB_inv * viewPos;
 	viewPos = viewPos/viewPos.w;
 	vec4 norm = texture(uImage02, vBiasedClipCoord.xy);
@@ -82,7 +82,7 @@ vec4 phongDiffuse()
 	vec4 normNorm = (norm * 2.0) - 1.0;
 	vec4 viewVec = -normalize(viewPos);
 
-	monoLight = uLight[vInstanceID].worldPos - viewPos;
+	monoLight = uLight[i].worldPos - viewPos;
 	monoLight = normalize(monoLight);
 	dotVal = max(0.0, dot(normNorm, monoLight));
 
@@ -92,7 +92,7 @@ vec4 phongDiffuse()
 	return diffuseSum;
 }
 
-vec4 phongSpecular()
+vec4 phongSpecular(int i)
 {
 	vec4 specularSum = vec4 (0.0,0.0,0.0,1.0);
 	vec4 reflection = vec4(0.0,0.0,0.0,0.0);
@@ -100,7 +100,7 @@ vec4 phongSpecular()
 
 	//Convert Images to vec4 data
 	vec4 viewPos = texture(uImage01,vBiasedClipCoord.xy);
-	viewPos = viewPos + uLight[vInstanceID].viewPos;
+	viewPos = viewPos + uLight[i].viewPos;
 	viewPos = uPB_inv * viewPos;
 	viewPos = viewPos/viewPos.w;
 	vec4 norm = texture(uImage02, vBiasedClipCoord.xy);
@@ -110,7 +110,7 @@ vec4 phongSpecular()
 	vec4 normNorm = (norm * 2.0) - 1.0;
 	vec4 viewVec = -normalize(viewPos);
 
-	monoLight = uLight[vInstanceID].worldPos - viewPos;
+	monoLight = uLight[i].worldPos - viewPos;
 	monoLight = normalize(monoLight);
 	dotVal = max(0.0, dot(normNorm, monoLight));
 
@@ -131,6 +131,15 @@ vec4 phongSpecular()
 
 void main()
 {
-	rtDiffuseLight = phongDiffuse();
-	rtSpecularLight = phongSpecular();
+	vec4 diffuseTotal = vec4 (0.0,0.0,0.0,1.0);
+	vec4 specTotal = vec4 (0.0,0.0,0.0,1.0);
+
+	for (int i = 0; i < MAX_LIGHTS; ++i)
+	{
+		diffuseTotal += phongDiffuse(i);
+		specTotal += phongSpecular(i);
+	}
+
+	rtDiffuseLight = diffuseTotal;
+	rtSpecularLight = specTotal;
 }

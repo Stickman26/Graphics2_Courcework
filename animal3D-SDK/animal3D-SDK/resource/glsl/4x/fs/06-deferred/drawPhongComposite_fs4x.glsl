@@ -37,6 +37,11 @@
 //					+ specular light * specular sample 
 
 in vec4 vTexcoord;
+uniform sampler2D uImage03; //texCoord
+uniform sampler2D uImage04; //diffuse
+uniform sampler2D uImage05; //specular
+uniform sampler2D uImage06;//diffuselight
+uniform sampler2D uImage07;//speclight
 
 layout (location = 0) out vec4 rtFragColor;
 layout (location = 4) out vec4 rtDiffuseMapSample;
@@ -44,8 +49,19 @@ layout (location = 5) out vec4 rtSpecularMapSample;
 
 void main()
 {
+	vec4 sampledTextCoord = texture(uImage03, vTexcoord.xy);
+
+	vec4 diffuseMap = textureProj(uImage04,sampledTextCoord);
+	vec4 specularMap = textureProj(uImage05,sampledTextCoord);
+	vec4 diffuseLight = textureProj(uImage06,sampledTextCoord);
+	vec4 specularLight = textureProj(uImage07,sampledTextCoord);
+
+	vec4 diffuseCalc = diffuseLight * diffuseMap;
+	vec4 specularCalc = specularLight * specularMap;
+
+
 	// DUMMY OUTPUT: all fragments are OPAQUE YELLOW (and others)
-	rtFragColor = vec4(1.0, 1.0, 0.0, 1.0);
-	rtDiffuseMapSample = vec4(1.0, 0.0, 0.0, 1.0);
-	rtSpecularMapSample = vec4(0.0, 1.0, 0.0, 1.0);
+	rtFragColor = diffuseCalc + specularCalc;
+	rtDiffuseMapSample = diffuseCalc;
+	rtSpecularMapSample = specularCalc;
 }
