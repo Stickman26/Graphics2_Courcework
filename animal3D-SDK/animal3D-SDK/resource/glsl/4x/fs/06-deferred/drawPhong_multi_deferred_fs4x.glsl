@@ -117,7 +117,7 @@ vec4 phongSpecular()
 		specular *= specular; //4
 		specular *= specular; //8
 		specular *= specular; //16
-		specular *= specular; //32
+		//specular *= specular; //32
 
 		specularSum += specular * uLightCol[i];
 	}
@@ -132,7 +132,7 @@ vec4 phongLightClump()
 	if(depthCheck == 1.0)
 		discard;
 
-	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+	vec4 lightSum = vec4 (0.0,0.0,0.0,1.0);
 
 	vec4 lightTextCoord = texture(uImage03, vTexcoord.xy);
 
