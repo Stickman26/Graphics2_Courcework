@@ -59,16 +59,42 @@ layout (location = 5) out vec4 rtSpecularMapSample;
 layout (location = 6) out vec4 rtDiffuseLightTotal;
 layout (location = 7) out vec4 rtSpecularLightTotal;
 
-vec4 phongLightClump()
+vec4 phongDiffuse()
 {
-	vec4 lightSum = vec4 (0.0,0.0,0.0,1.0);
+	vec4 diffuseSum = vec4 (0.0,0.0,0.0,1.0);
+
+	//Convert Images to vec4 data
+	vec4 viewPos = texture(uImage01, vTexcoord.xy);
+	viewPos = uPB_inv * viewPos;
+	viewPos = viewPos / viewPos.w;
+	vec4 norm = texture(uImage02, vTexcoord.xy);
+
+	vec4 monoLight;
+	float dotVal;
+	vec4 normNorm = (norm * 2.0) - 1.0;
+	vec4 viewVec = -normalize(viewPos);
+
+	for (int i = 0; i < uLightCt; ++i)
+	{
+		monoLight = uLightPos[i] - viewPos;
+		monoLight = normalize(monoLight);
+		dotVal = max(0.0, dot(normNorm, monoLight));
+
+		diffuseSum += dotVal * uLightCol[i];
+	}
+
+	return diffuseSum;
+}
+
+vec4 phongSpecular()
+{
+	vec4 specularSum = vec4 (0.0,0.0,0.0,1.0);
 	vec4 reflection = vec4(0.0,0.0,0.0,0.0);
 	float specular;
 
 	//Convert Images to vec4 data
-	vec4 lightTextCoord = texture(uImage03, vTexcoord.xy);
-	vec4 viewPos = texture(uImage00, vTexcoord.xy);
-	viewPos = viewPos * uPB_inv;
+	vec4 viewPos = texture(uImage01, vTexcoord.xy);
+	viewPos = uPB_inv * viewPos;
 	viewPos = viewPos / viewPos.w;
 	vec4 norm = texture(uImage02, vTexcoord.xy);
 
@@ -93,77 +119,27 @@ vec4 phongLightClump()
 		specular *= specular; //16
 		specular *= specular; //32
 
-		lightSum += dotVal * textureProj(uImage04, lightTextCoord) * uLightCol[i];
-		lightSum += specular * textureProj(uImage05, lightTextCoord) * uLightCol[i];
-	}
-
-	return lightSum;
-}
-
-vec4 phongDiffuse()
-{
-	vec4 diffuseSum = vec4 (0.0,0.0,0.0,1.0);
-
-	//Convert Images to vec4 data
-	vec4 viewPos = texture(uImage00, vTexcoord.xy);
-	viewPos = viewPos * uPB_inv;
-	viewPos = viewPos / viewPos.w;
-	vec4 norm = texture(uImage02, vTexcoord.xy);
-
-	vec4 monoLight;
-	float dotVal;
-	vec4 normNorm = normalize(norm);
-	vec4 viewVec = -normalize(viewPos);
-
-	for (int i = 0; i < uLightCt; ++i)
-	{
-		monoLight = uLightPos[i] - viewPos;
-		monoLight = normalize(monoLight);
-		dotVal = max(0.0, dot(normNorm, monoLight));
-
-		diffuseSum += dotVal * uLightCol[i];
-	}
-
-	return diffuseSum;
-}
-
-vec4 phongSpecular()
-{
-	vec4 specularSum = vec4 (0.0,0.0,0.0,1.0);
-	vec4 reflection = vec4(0.0,0.0,0.0,0.0);
-	float specular;
-
-	//Convert Images to vec4 data
-	vec4 viewPos = texture(uImage00, vTexcoord.xy);
-	viewPos = viewPos * uPB_inv;
-	viewPos = viewPos / viewPos.w;
-	vec4 norm = texture(uImage02, vTexcoord.xy);
-
-	vec4 monoLight;
-	float dotVal;
-	vec4 normNorm = normalize(norm);
-	vec4 viewVec = -normalize(viewPos);
-
-	for (int i = 0; i < uLightCt; ++i)
-	{
-		monoLight = uLightPos[i] - viewPos;
-		monoLight = normalize(monoLight);
-		dotVal = max(0.0, dot(normNorm, monoLight));
-
-		reflection = 2.0 * max(0.0, dot(normNorm, monoLight)) * normNorm - monoLight;
-
-		specular = max(dot(viewVec, reflection), 0.0);
-		//power 32
-		specular *= specular; //2
-		specular *= specular; //4
-		specular *= specular; //8
-		specular *= specular; //16
-		specular *= specular; //32
-
 		specularSum += specular * uLightCol[i];
 	}
 
 	return specularSum;
+}
+
+
+vec4 phongLightClump()
+{
+	float depthCheck = texture(uImage00, vTexcoord.xy).x;
+	if(depthCheck == 1.0)
+		discard;
+
+	vec4 lightSum = vec4 (0.0,0.0,0.0,0.0);
+
+	vec4 lightTextCoord = texture(uImage03, vTexcoord.xy);
+
+	lightSum += textureProj(uImage04, lightTextCoord) * phongDiffuse();
+	lightSum += textureProj(uImage05, lightTextCoord) * phongSpecular();
+
+	return lightSum;
 }
 
 void main()

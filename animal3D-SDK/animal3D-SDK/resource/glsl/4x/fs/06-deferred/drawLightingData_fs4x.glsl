@@ -38,15 +38,15 @@ in vbLightingData {
 };
 
 
-layout (location = 1) out vec4 rtViewPosition;
+//layout (location = 1) out vec4 rtViewPosition;
 layout (location = 2) out vec4 rtViewNormal;
 layout (location = 3) out vec4 rtAtlasTexcoord;
-layout (location = 4) out vec4 rtShading;
+layout (location = 1) out vec4 rtShading;
 
 void main()
 {
-	rtViewPosition = vViewPosition;
-	rtViewNormal = (normalize(vViewNormal) * 0.5) + 0.5;
+	//rtViewPosition = vViewPosition;
+	rtViewNormal = vec4((normalize(vViewNormal.xyz) * 0.5) + 0.5,1.0);
 	rtAtlasTexcoord = vTexcoord;
 	rtShading = vBiasedClipCoord / vBiasedClipCoord.w;
 }
