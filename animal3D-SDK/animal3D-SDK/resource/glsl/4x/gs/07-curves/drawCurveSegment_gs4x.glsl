@@ -43,7 +43,68 @@
 //	6) write interpolation functions to help with sampling
 //	7) select curve type and sample over [0, 1] interval
 
-void main()
+// (1)
+layout (lines) in;
+
+// (4)
+layout (line_strip, max_vertices = MAX_VERTICES) out;
+
+// (3)
+uniform mat4 uMVP;
+uniform int uFlag;
+uniform double uTime;
+
+// (2)
+in vbVertexData {
+	mat4 vTangentBasis_view;
+	vec4 vTexcoord_atlas;
+	flat int vVertexID, vInstanceID, vModelID;
+} vVertexData[]; //2 elements?
+
+// (5)
+out vec4 vColor;
+
+// (6)
+void InterpLines()
+{
+	// 1 = none, 2 = linear, 3 = bezier, 4 = catmull-roth, 5 = cubic hermite
+	if (uFlag == 2)
+	{
+		linearInterpolation();
+	}
+	//vColor = vec4(0.0,1.0,0.0,1.0);
+	//gl_Position = uMVP * vVertexData[0].vTexcoord_atlas;
+	//EmitVertex();
+	//gl_Position = uMVP * vVertexData[1].vTexcoord_atlas;
+	//EmitVertex();
+	//EndPrimitive();
+}
+
+vec4 linearInterpolation(vec4 p0, vec4 p1, float time)
+{
+	return p0 + (p1 - p0) * time;
+}
+
+void bezierInterpolation()
+{
+	return ;
+}
+
+void catmullRothInterpolation()
 {
 	
+}
+
+void cubicHermiteInterpolation()
+{
+	
+}
+
+
+
+// (7)
+
+void main()
+{
+	InterpLines();
 }
