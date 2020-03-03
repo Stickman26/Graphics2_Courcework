@@ -358,6 +358,10 @@ extern "C"
 					prog_drawCurveSegment[1],					// draw curve segment using interpolation
 					prog_drawPhong_multi_forward_mrt[1],		// draw Phong with forward point lights and MRT
 					prog_drawOverlays_tangents_wireframe[1];	// draw tangent bases using geometry shader
+				a3_DemoStateShaderProgram
+					prog_drawTexture_pixelation[1],
+					prog_mirrorTexture[1],
+					prog_drawPhong_multi_forward_mrt[1];
 			};
 		};
 

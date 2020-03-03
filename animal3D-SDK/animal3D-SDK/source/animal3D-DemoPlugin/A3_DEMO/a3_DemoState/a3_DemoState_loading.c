@@ -475,6 +475,9 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// 07-curves
 			a3_DemoStateShader
 				drawPhong_multi_forward_mrt_fs[1];
+			a3_DemoStateShader
+				drawTexture_pixelation_fs[1],
+				mirrorTexture_fs[1];
 		};
 	} shaderList = {
 		{
@@ -536,6 +539,10 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			{ { { 0 },	"shdr-fs:draw-Phong-composite",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/drawPhongComposite_fs4x.glsl" } } },
 			// 07-curves
 			{ { { 0 },	"shdr-fs:draw-Phong-mul-fwd-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"07-curves/drawPhong_multi_forward_mrt_fs4x.glsl" } } },
+
+			//midterm
+			{ { { 0 },	"shdr-fs:draw-pixelation",			a3shader_fragment,	1,{ A3_DEMO_FS"Midterm/drawTexture_pixelation_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-reflective",			a3shader_fragment,	1,{ A3_DEMO_FS"Midterm/mirrorTexture_fs4x.glsl" } } },
 		}
 	};
 	a3_DemoStateShader *const shaderListPtr = (a3_DemoStateShader *)(&shaderList), *shaderPtr;
@@ -716,6 +723,16 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawCurveSegment_gs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
+
+	currentDemoProg = demoState->prog_drawPhong_multi_forward_mrt;
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-mul-fwd-mrt");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_forward_mrt_fs->shader);
+	currentDemoProg = demoState->prog_mirrorTexture;
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-reflective");
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_pixelation_fs->shader);
+
 
 
 	// activate a primitive for validation

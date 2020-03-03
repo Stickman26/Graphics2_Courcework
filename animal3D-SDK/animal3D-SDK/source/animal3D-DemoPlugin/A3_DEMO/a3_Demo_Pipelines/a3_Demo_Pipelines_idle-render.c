@@ -67,7 +67,7 @@ void a3pipelines_render_controls(a3_DemoState const* demoState, a3_Demo_Pipeline
 	// forward display names
 	a3byte const* displayProgramName[pipelines_display_max] = {
 		"Texture",
-		"Texture with outlines",
+		"Pixelation",
 	};
 
 	// active camera name
@@ -267,7 +267,7 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 	// display shader programs
 	const a3_DemoStateShaderProgram* displayProgram[pipelines_display_max] = {
 		demoState->prog_drawTexture,
-		demoState->prog_drawTexture_outline,
+		demoState->prog_drawTexture_pixelation,
 	};
 
 	// framebuffers to which to write based on pipeline mode
@@ -827,7 +827,7 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 
 			// display with outlines
 			// need to activate more textures and send params (e.g. color, pixel size/axis)
-		case pipelines_displayOutline:
+		case pipelines_displayPixelation:
 			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt;
 			a3real2Set(pixelSize.v, a3recip((a3real)currentReadFBO->frameWidth), a3recip((a3real)currentReadFBO->frameHeight));
 			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_w.v);	// use as line color
