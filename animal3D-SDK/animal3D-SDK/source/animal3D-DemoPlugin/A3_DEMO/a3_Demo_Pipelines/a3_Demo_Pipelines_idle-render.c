@@ -67,6 +67,7 @@ void a3pipelines_render_controls(a3_DemoState const* demoState, a3_Demo_Pipeline
 	// forward display names
 	a3byte const* displayProgramName[pipelines_display_max] = {
 		"Texture",
+		"Texture with outlines",
 		"Pixelation",
 	};
 
@@ -267,6 +268,7 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 	// display shader programs
 	const a3_DemoStateShaderProgram* displayProgram[pipelines_display_max] = {
 		demoState->prog_drawTexture,
+		demoState->prog_drawTexture_outline,
 		demoState->prog_drawTexture_pixelation,
 	};
 
@@ -827,7 +829,7 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 
 			// display with outlines
 			// need to activate more textures and send params (e.g. color, pixel size/axis)
-		case pipelines_displayPixelation:
+		case pipelines_displayOutline:
 			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt;
 			a3real2Set(pixelSize.v, a3recip((a3real)currentReadFBO->frameWidth), a3recip((a3real)currentReadFBO->frameHeight));
 			a3shaderUniformSendFloat(a3unif_vec4, currentDemoProgram->uColor, 1, a3vec4_w.v);	// use as line color
@@ -835,6 +837,10 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 			a3shaderUniformSendFloat(a3unif_vec2, currentDemoProgram->uSize, 1, pixelSize.v);	// use as actual pixel size
 			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);
 			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, pipelines_scene_normal);
+			break;
+		case pipelines_displayPixelation:
+			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt;
+			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit00, pipelines_scene_normal);
 			break;
 		}
 

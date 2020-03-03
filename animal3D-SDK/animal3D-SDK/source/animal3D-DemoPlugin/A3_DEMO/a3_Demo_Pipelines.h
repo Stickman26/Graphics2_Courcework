@@ -66,7 +66,8 @@ extern "C"
 	enum a3_Demo_Pipelines_DisplayProgramName
 	{
 		pipelines_displayTexture,		// display simple texture
-		pipelines_displayPixelation,		// display texture with outlines
+		pipelines_displayOutline,		// display texture with outlines
+		pipelines_displayPixelation,
 
 		pipelines_display_max
 	};
