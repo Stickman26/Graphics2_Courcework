@@ -30,12 +30,9 @@ uniform sampler2D uImage1;
 uniform sampler2D uImage2;
 
 //Toon outline
-uniform vec2 uSize; //pixel size actual
-uniform vec2 uAxis; //thickness
-uniform vec4 uColor; //color of line
 
 in vec4 textureCoordOut;
-
+out vec4 rtFragColor;
 void main()
 {
 	vec4 vTexture = textureProj(uTex_dm, textureCoordOut);	

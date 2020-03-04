@@ -840,7 +840,9 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 			break;
 		case pipelines_displayPixelation:
 			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt;
-			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit00, pipelines_scene_normal);
+			a3real2Set(pixelSize.v, a3recip((a3real)currentReadFBO->frameWidth), a3recip((a3real)currentReadFBO->frameHeight));
+			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);
+			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, pipelines_scene_normal);
 			break;
 		}
 
