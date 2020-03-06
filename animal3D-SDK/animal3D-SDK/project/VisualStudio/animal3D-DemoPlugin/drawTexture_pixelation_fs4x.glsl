@@ -26,8 +26,8 @@
 
 uniform sampler2D uTex_dm;
 uniform sampler2D uTex_sm;
-uniform sampler2D uImage1;
-uniform sampler2D uImage2;
+uniform sampler2D uImage01;
+uniform sampler2D uImage02;
 
 //Toon outline
 
@@ -40,7 +40,9 @@ void main()
 	float dx = 15.0 * (1.0/512.0);
 	float dy = 10.0 * (1.0/512.0);
 	vec2 coord = vec2(dx*floor(textureCoordOut.x/dx),dy*floor(textureCoordOut.y/dy));
-	rtFragColor = texture2D(uTex_dm,coord);
+	vec4 storage = texture2D(uTex_dm,coord);
+	storage.a = 1.0;
+	rtFragColor = vec4(0.0,0.0,1.0,1.0);
 
 
 	
