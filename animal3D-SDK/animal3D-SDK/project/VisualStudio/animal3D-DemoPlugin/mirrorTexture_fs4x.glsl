@@ -22,6 +22,12 @@
 	Draw textures to scene objects which are reflective.
 */
 
+// Notes to self:
+// Generate a cube map using skybox
+// build a reflect function
+// build a refract function
+// mix them
+
 #version 410
 
 void main() 

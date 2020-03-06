@@ -35,15 +35,10 @@ in vec4 textureCoordOut;
 out vec4 rtFragColor;
 void main()
 {
-	vec4 vTexture = textureProj(uTex_dm, textureCoordOut);	
-	
-	float dx = 15.0 * (1.0/512.0);
+	float dx = 10.0 * (1.0/512.0);
 	float dy = 10.0 * (1.0/512.0);
 	vec2 coord = vec2(dx*floor(textureCoordOut.x/dx),dy*floor(textureCoordOut.y/dy));
 	vec4 storage = texture2D(uTex_dm,coord);
 	storage.a = 1.0;
-	rtFragColor = vec4(0.0,0.0,1.0,1.0);
-
-
-	
+	rtFragColor = vec4(0.0,0.0,1.0,1.0);	
 }
