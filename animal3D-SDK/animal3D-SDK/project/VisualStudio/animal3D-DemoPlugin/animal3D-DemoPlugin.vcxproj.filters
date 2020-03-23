@@ -322,14 +322,17 @@
     <None Include="..\..\..\resource\glsl\4x\gs\07-curves\drawCurveSegment_gs4x.glsl">
       <Filter>Resource Files\A3_DEMO\glsl\4x\gs\07-curves</Filter>
     </None>
-    <None Include="mirrorTexture_fs4x.glsl">
-      <Filter>Resource Files\A3_DEMO\glsl\4x\fs\Midterm</Filter>
-    </None>
-    <None Include="drawTexture_pixelation_fs4x.glsl">
-      <Filter>Resource Files\A3_DEMO\glsl\4x\fs\Midterm</Filter>
-    </None>
     <None Include="mirrorTexture_vs4x.glsl">
       <Filter>Resource Files\A3_DEMO\glsl\4x\vs\Midterm</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\fs\Midterm\drawTexture_pixelation_fs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\fs\Midterm\mirrorTexture_fs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
+    </None>
+    <None Include="..\..\..\resource\glsl\4x\fs\Midterm\mirrorTexture_vs4x.glsl">
+      <Filter>Resource Files\A3_DEMO\glsl\4x\fs</Filter>
     </None>
   </ItemGroup>
 </Project>
