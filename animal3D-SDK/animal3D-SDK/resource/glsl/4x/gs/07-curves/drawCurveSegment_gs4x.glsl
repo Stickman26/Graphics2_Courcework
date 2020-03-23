@@ -85,9 +85,11 @@ vec4 linearInterpolation(vec4 p0, vec4 p1, float time)
 	return p0 + (p1 - p0) * time;
 }
 
-void bezierInterpolation()
+vec4 bezierInterpolation(vec4 p0, vec4 p1, vec4 p2, float time)
 {
-	return ;
+	vec4 q0 = linearInterpolation(p0,p1,time);
+	vec4 q1 = linearInterpolation(p1,p2,time);
+	return linearInterpolation(q0,q1,time);
 }
 
 void catmullRothInterpolation()
