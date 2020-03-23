@@ -53,14 +53,25 @@ layout (line_strip, max_vertices = MAX_VERTICES) out;
 uniform mat4 uMVP;
 uniform int uFlag;
 uniform double uTime;
+uniform int uCount;
+uniform int uIndex;
+
+struct sWaypoint
+{
+	mat4 modelMat;	// model matrix: transform relative to scene
+	mat4 modelMatInv;	// inverse model matrix: scene relative to this
+	vec3 euler;		// euler angles for direct rotation control
+	vec3 position;	// scene position for direct control
+	vec3 scale;		// scale (not accounted for in update)
+	int scaleMode;		// 0 = off; 1 = uniform; other = non-uniform (nightmare)
+};
+
+uniform ubCurveWaypoint{
+	sWaypoint uWaypoint[MAX_WAYPOINTS];
+};
 
 // (2)
-in vbVertexData {
-	mat4 vTangentBasis_view;
-	vec4 vTexcoord_atlas;
-	flat int vVertexID, vInstanceID, vModelID;
-} vVertexData[]; //2 elements?
-
+flat in int vInstanceID[];
 // (5)
 out vec4 vColor;
 
@@ -91,17 +102,32 @@ void cubicHermiteInterpolation()
 
 void InterpLines()
 {
-	//maybe a for loop to loop over each waypoint?
-	for(int i = 0; i < MAX_WAYPOINTS-1; ++i )
+	
+	int segmentIndex = vInstanceID[0];
+	for(int i = 0; i < 16; ++i)
 	{
-		gl_Position = linearInterpolation(gl_in[i].gl_Position,gl_in[i+1].gl_Position,0.0);
+		float t = i/16;
+//		int current = uIndex;
+//		int next = (uIndex + 1) % uCount;
+		int i0 = uIndex;
+		int i1 = (i0 + 1) % uCount;
+		int i2 = (i1 + 1) % uCount;
+//		iN = (uCount + i0 - 1) % uCount;
+
+		bezierInterpolation(vec4(uWaypoint[i0].position,0.0),vec4(uWaypoint[i1].position,0.0),vec4(uWaypoint[i2].position,0.0),t);
 	}
 
+	//maybe a for loop to loop over each waypoint?
+//	for(int i = 0; i < MAX_WAYPOINTS-1; ++i )
+//	{
+//		gl_Position = linearInterpolation(gl_in[i].gl_Position,gl_in[i+1].gl_Position,0.0);
+//	}
+
 	// 1 = none, 2 = linear, 3 = bezier, 4 = catmull-roth, 5 = cubic hermite
-	if (uFlag == 2)
-	{
-		linearInterpolation();
-	}
+//	if (uFlag == 2)
+//	{
+//		linearInterpolation();
+//	}
 	//vColor = vec4(0.0,1.0,0.0,1.0);
 	//gl_Position = uMVP * vVertexData[0].vTexcoord_atlas;
 	//EmitVertex();
