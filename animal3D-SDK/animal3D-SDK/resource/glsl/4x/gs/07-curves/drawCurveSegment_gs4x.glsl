@@ -65,20 +65,7 @@ in vbVertexData {
 out vec4 vColor;
 
 // (6)
-void InterpLines()
-{
-	// 1 = none, 2 = linear, 3 = bezier, 4 = catmull-roth, 5 = cubic hermite
-	if (uFlag == 2)
-	{
-		linearInterpolation();
-	}
-	//vColor = vec4(0.0,1.0,0.0,1.0);
-	//gl_Position = uMVP * vVertexData[0].vTexcoord_atlas;
-	//EmitVertex();
-	//gl_Position = uMVP * vVertexData[1].vTexcoord_atlas;
-	//EmitVertex();
-	//EndPrimitive();
-}
+
 
 vec4 linearInterpolation(vec4 p0, vec4 p1, float time)
 {
@@ -102,7 +89,26 @@ void cubicHermiteInterpolation()
 	
 }
 
+void InterpLines()
+{
+	//maybe a for loop to loop over each waypoint?
+	for(int i = 0; i < MAX_WAYPOINTS-1; ++i )
+	{
+		gl_Position = linearInterpolation(gl_in[i].gl_Position,gl_in[i+1].gl_Position,0.0);
+	}
 
+	// 1 = none, 2 = linear, 3 = bezier, 4 = catmull-roth, 5 = cubic hermite
+	if (uFlag == 2)
+	{
+		linearInterpolation();
+	}
+	//vColor = vec4(0.0,1.0,0.0,1.0);
+	//gl_Position = uMVP * vVertexData[0].vTexcoord_atlas;
+	//EmitVertex();
+	//gl_Position = uMVP * vVertexData[1].vTexcoord_atlas;
+	//EmitVertex();
+	//EndPrimitive();
+}
 
 // (7)
 
