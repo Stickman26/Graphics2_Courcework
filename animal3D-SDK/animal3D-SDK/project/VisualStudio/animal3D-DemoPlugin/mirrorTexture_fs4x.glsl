@@ -30,7 +30,28 @@
 
 #version 410
 
+//Uniform skybox as a samplerCube
+
+//Need texture coords, normal, and a reflected vector in
+
+out vec4 rtFragColor;
+
+//Demo_Pipelines_idle-render.c ln 568, this is where the skybox is drawn, seek data
+
+vec4 reflectiveTexture(vec4 regTex, float mixVal)
+{
+	//vec4 reflectionCol = texture(samplerCube, reflectedVector);
+
+	//return mix(regTex, reflectionCol, mixVal);
+
+	//DUMMY OUTPUT COLOR
+	return vec4(1.0,0.0,1.0,1.0);
+}
+
+//Insert phong here
+
 void main() 
 {
-	
+	phongVal = vec4(0.0,0.0,0.0,1.0)
+	rtFragColor = reflectiveTexture(phongVal , 0.6);
 }

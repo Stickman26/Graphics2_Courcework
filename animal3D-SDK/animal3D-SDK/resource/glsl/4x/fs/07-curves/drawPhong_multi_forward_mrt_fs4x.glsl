@@ -153,7 +153,6 @@ void addPhongComponents(
 	specularLightTotal += attenuationColor * specularCoefficient;
 }
 
-
 void main()
 {
 	// DUMMY OUTPUT: all fragments are colored based on model index
