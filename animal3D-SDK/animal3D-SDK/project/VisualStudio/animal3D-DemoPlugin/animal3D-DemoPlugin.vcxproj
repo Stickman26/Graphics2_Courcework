@@ -248,7 +248,6 @@
     <None Include="..\..\..\resource\glsl\4x\fs\drawColorUnif_fs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\fs\Midterm\drawTexture_pixelation_fs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\fs\Midterm\mirrorTexture_fs4x.glsl" />
-    <None Include="..\..\..\resource\glsl\4x\fs\Midterm\mirrorTexture_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\gs\07-curves\drawCurveSegment_gs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\gs\07-curves\drawOverlays_tangents_wireframe_gs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\02-shading\passLightingData_transform_vs4x.glsl" />
@@ -258,13 +257,13 @@
     <None Include="..\..\..\resource\glsl\4x\vs\06-deferred\passBiasedClipCoord_transform_instanced_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\06-deferred\passLightingData_transform_bias_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\07-curves\passTangentBasis_transform_instanced_vs4x.glsl" />
+    <None Include="..\..\..\resource\glsl\4x\vs\Midterm\mirrorTexture_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passColor_transform_instanced_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passColor_transform_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_transform_instanced_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_transform_vs4x.glsl" />
     <None Include="..\..\..\resource\glsl\4x\vs\passthru_vs4x.glsl" />
     <None Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_a3_demo_utilities\_inl\a3_DemoRenderUtils.inl" />
-    <None Include="mirrorTexture_vs4x.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

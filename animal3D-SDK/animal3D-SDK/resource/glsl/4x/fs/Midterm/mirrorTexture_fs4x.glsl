@@ -41,6 +41,44 @@ in vec3 reflectedVector;
 
 out vec4 rtFragColor;
 
+//Matrixes for using the skybox texture in a pseduo cube map fasion
+mat4 frontFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0, 
+0.0, 0.25, 0.0, 0.0, 
+0.0, 0.0, 1.0, 0.0, 
+0.375, 0.0, 0.0, 1.0); // Mid Sun
+
+mat4 topFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.375, 0.25, 0.0, 1.0); //Above the Sun
+
+mat4 backFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.375, 0.5, 0.0, 1.0); //Below Vortex
+
+mat4 bottomFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0, 
+0.0, 0.0, 1.0, 0.0, 
+0.375, 0.75, 0.0, 1.0); // Mid Vortex
+
+mat4 rightFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.625, 0.0, 0.0, 1.0); //Right of Sun
+
+mat4 leftFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.125, 0.0, 0.0, 1.0); //Left of Sun
+
+
 //Demo_Pipelines_idle-render.c ln 568, this is where the skybox is drawn, seek data
 
 vec4 reflectiveTexture(vec4 regTex, float mixVal)
@@ -57,6 +95,6 @@ vec4 reflectiveTexture(vec4 regTex, float mixVal)
 
 void main() 
 {
-	phongVal = vec4(0.0,0.0,0.0,1.0)
+	vec4 phongVal = vec4(0.0,0.0,0.0,1.0);
 	rtFragColor = reflectiveTexture(phongVal , 0.6);
 }
