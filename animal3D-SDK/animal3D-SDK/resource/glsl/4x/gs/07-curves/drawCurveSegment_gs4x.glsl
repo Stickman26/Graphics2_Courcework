@@ -44,8 +44,8 @@
 //	7) select curve type and sample over [0, 1] interval
 
 // (1)
-layout (lines) in;
-
+//layout (lines) in;
+layout (triangles) in;
 // (4)
 layout (line_strip, max_vertices = MAX_VERTICES) out;
 
@@ -83,11 +83,15 @@ vec4 linearInterpolation(vec4 p0, vec4 p1, float time)
 	return p0 + (p1 - p0) * time;
 }
 
-vec4 bezierInterpolation(vec4 p0, vec4 p1, vec4 p2, float time)
+vec4 bezierInterpolation(vec4 p0, vec4 p1, vec4 p2, vec4 p3, float time)
 {
-	vec4 q0 = linearInterpolation(p0,p1,time);
-	vec4 q1 = linearInterpolation(p1,p2,time);
-	return linearInterpolation(q0,q1,time);
+//	vec4 q0 = linearInterpolation(p0,p1,time);
+//	vec4 q1 = linearInterpolation(p1,p2,time);
+//	return linearInterpolation(q0,q1,time);
+    float time2 = time * time;
+    float one_minus_time = 1.0 - time;
+    float one_minus_time2 = one_minus_time * one_minus_time;
+    return (p0 * one_minus_time2 * one_minus_time + p1 * 3.0 * time * one_minus_time2 + p2 * 3.0 * time2 * one_minus_time + p3 * time2 * time);
 }
 
 void catmullRothInterpolation()
@@ -102,21 +106,32 @@ void cubicHermiteInterpolation()
 
 void InterpLines()
 {
-	
-	int segmentIndex = vInstanceID[0];
-	for(int i = 0; i < 16; ++i)
-	{
-		float t = i/16;
-//		int current = uIndex;
-//		int next = (uIndex + 1) % uCount;
-		int i0 = uIndex;
-		int i1 = (i0 + 1) % uCount;
-		int i2 = (i1 + 1) % uCount;
-//		iN = (uCount + i0 - 1) % uCount;
+	//if(uFlag >= 2 && uFlag < 6)
+	//{
+		int segmentIndex = vInstanceID[0];
+		for(int i = 0; i < 16; ++i)
+		{
+			float t = i/16;
+	//		int current = uIndex;
+	//		int next = (uIndex + 1) % uCount;
+			int i0 = uIndex;
+			int i1 = (i0 + 1) % uCount;
+			int i2 = (i1 + 1) % uCount;
+			int i3 = (i2 + 1) % uCount;
+	//		iN = (uCount + i0 - 1) % uCount;
 
-		bezierInterpolation(vec4(uWaypoint[i0].position,0.0),vec4(uWaypoint[i1].position,0.0),vec4(uWaypoint[i2].position,0.0),t);
-	}
-
+			vec4 location = bezierInterpolation(vec4(uWaypoint[i0].position,0.0),vec4(uWaypoint[i1].position,0.0),vec4(uWaypoint[i2].position,0.0),vec4(uWaypoint[i3].position,0.0),t);
+			vColor = vec4(1.0,0.5,0.0,1.0);
+			gl_Position = location;
+			EmitVertex();
+			gl_Position = uWaypoint[i1].modelMat * location;
+			EmitVertex();
+			gl_Position = location*2;
+			EmitVertex();
+			EndPrimitive();
+		}
+		
+	//}
 	//maybe a for loop to loop over each waypoint?
 //	for(int i = 0; i < MAX_WAYPOINTS-1; ++i )
 //	{

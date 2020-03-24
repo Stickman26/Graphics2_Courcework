@@ -83,7 +83,22 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 		//		-> update parameter in range [0, 1)
 		// update controller
 
-
+		if (demoState->segmentCount > 0)
+		{
+			demoState->segmentTime += (float)dt;
+			if (demoState->segmentTime > demoState->segmentDuration)
+			{
+				demoState->segmentTime -= demoState->segmentDuration;
+				if (demoState->segmentIndex < demoState->segmentCount - 1) //make sure we don't go out of bounds
+				{
+					demoState->segmentIndex++;
+				}
+				else
+				{
+					demoState->segmentIndex = 0;
+				}
+			}
+		}
 
 
 
@@ -99,7 +114,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 
 		// ****TO-DO: 
 		//	-> uncomment interpolation
-		/*
+		
 		// perform position interpolation on current segment
 		switch (demoMode->interp)
 		{
@@ -142,7 +157,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 		//		demoState->segmentParam);
 			break;
 		}
-		*/
+		
 	}
 	else
 	{
