@@ -31,8 +31,13 @@
 #version 410
 
 //Uniform skybox as a samplerCube
+uniform sampler2D uTex_dm;
+uniform sampler2D uTex_sm;
 
 //Need texture coords, normal, and a reflected vector in
+in vec4 passTexcoord;
+in vec4 passNorm;
+in vec3 reflectedVector;
 
 out vec4 rtFragColor;
 
