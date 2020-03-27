@@ -98,6 +98,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 					demoState->segmentIndex = 0;
 				}
 			}
+			demoState->segmentParam = demoState->segmentTime * demoState->segmentDurationInv;
 		}
 
 
@@ -131,6 +132,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 				demoState->curveWaypoint[k[2]].v,
 				demoState->curveWaypoint[k[3]].v,
 				demoState->segmentParam);
+			//do update position
 			break;
 		case curves_interpCatmullRom:
 			a3real3CatmullRom(demoState->sphereObject->position.v,

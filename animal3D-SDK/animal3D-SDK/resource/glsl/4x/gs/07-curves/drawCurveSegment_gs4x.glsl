@@ -44,8 +44,7 @@
 //	7) select curve type and sample over [0, 1] interval
 
 // (1)
-//layout (lines) in;
-layout (triangles) in;
+layout (lines) in;
 // (4)
 layout (line_strip, max_vertices = MAX_VERTICES) out;
 
@@ -119,16 +118,20 @@ void InterpLines()
 			int i2 = (i1 + 1) % uCount;
 			int i3 = (i2 + 1) % uCount;
 	//		iN = (uCount + i0 - 1) % uCount;
-
-			vec4 location = bezierInterpolation(vec4(uWaypoint[i0].position,0.0),vec4(uWaypoint[i1].position,0.0),vec4(uWaypoint[i2].position,0.0),vec4(uWaypoint[i3].position,0.0),t);
 			vColor = vec4(1.0,0.5,0.0,1.0);
-			gl_Position = location;
+			vec4 location = bezierInterpolation(vec4(uWaypoint[i0].position,0.0),vec4(uWaypoint[i1].position,0.0),vec4(uWaypoint[i2].position,0.0),vec4(uWaypoint[i3].position,0.0),t);
+
+			//Notes
+			//Need to take the location and then add it to the current location of the object, I think.
+			//Not quite sure how, as trying to set the position of uWaypoint will not work due to it being a uniform
+			//Unsure if there are any returns here other than color, and is the line drawing necessary to have it working?
+
+			gl_Position = uMVP * gl_in[0].gl_Position;
 			EmitVertex();
-			gl_Position = uWaypoint[i1].modelMat * location;
-			EmitVertex();
-			gl_Position = location*2;
+			gl_Position = uMVP * gl_in[1].gl_Position;
 			EmitVertex();
 			EndPrimitive();
+			
 		}
 		
 	//}
