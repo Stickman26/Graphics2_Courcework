@@ -83,7 +83,23 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 		//		-> update parameter in range [0, 1)
 		// update controller
 
-
+		if (demoState->segmentCount > 0)
+		{
+			demoState->segmentTime += (float)dt;
+			if (demoState->segmentTime > demoState->segmentDuration)
+			{
+				demoState->segmentTime -= demoState->segmentDuration;
+				if (demoState->segmentIndex < demoState->segmentCount - 1) //make sure we don't go out of bounds
+				{
+					demoState->segmentIndex++;
+				}
+				else
+				{
+					demoState->segmentIndex = 0;
+				}
+			}
+			demoState->segmentParam = demoState->segmentTime * demoState->segmentDurationInv;
+		}
 
 
 
@@ -99,7 +115,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 
 		// ****TO-DO: 
 		//	-> uncomment interpolation
-		/*
+		
 		// perform position interpolation on current segment
 		switch (demoMode->interp)
 		{
@@ -116,6 +132,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 				demoState->curveWaypoint[k[2]].v,
 				demoState->curveWaypoint[k[3]].v,
 				demoState->segmentParam);
+			//do update position
 			break;
 		case curves_interpCatmullRom:
 			a3real3CatmullRom(demoState->sphereObject->position.v,
@@ -142,7 +159,7 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 		//		demoState->segmentParam);
 			break;
 		}
-		*/
+		
 	}
 	else
 	{

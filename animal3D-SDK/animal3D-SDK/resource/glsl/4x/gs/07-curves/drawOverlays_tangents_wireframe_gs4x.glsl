@@ -41,25 +41,32 @@
 //	6) draw tangent bases
 //	7) draw wireframe
 
-//(1)
+// (1)
 layout (triangles) in;
 
-//(2)
+// (4)
+layout (line_strip, max_vertices = MAX_VERTICES) out;
+
+// (3)
+uniform mat4 uP;
+
+// (2)
 in vbVertexData {
 	mat4 vTangentBasis_view;
 	vec4 vTexcoord_atlas;
 	flat int vVertexID, vInstanceID, vModelID;
-}vVertexData[]; //3 elems bc triangle
+} vVertexData[]; // 3 elements
 
-//(4)
-layout (line_strip,max_vertices = MAX_VERTICES) out;
-
-//(5)
+// (5)
 out vec4 vColor;
 
+// (6)
+
+
+// (7)
 void drawWireFrame()
 {
-	vColor = vec4(1.0,0.5,0.0,1.0);
+	vColor = vec4(1.0,0.5,0.0,1.0); //orange
 	gl_Position = gl_in[0].gl_Position;
 	EmitVertex();
 	gl_Position = gl_in[1].gl_Position;
@@ -69,10 +76,9 @@ void drawWireFrame()
 	gl_Position = gl_in[0].gl_Position;
 	EmitVertex();
 	EndPrimitive();
-
 }
 
 void main()
 {
-	drawWireFrame();	
+	drawWireFrame();
 }
