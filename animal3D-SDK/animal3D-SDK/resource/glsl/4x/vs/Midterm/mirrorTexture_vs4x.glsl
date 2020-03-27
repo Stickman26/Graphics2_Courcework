@@ -34,11 +34,13 @@ layout (location = 0)	in vec4 aPosition;
 out vec4 passTexcoord;
 out vec4 passNorm;
 out vec3 reflectedVector;
+out vec3 rayOrigin;
 
 void main() {
 	
 	vec4 worldPos = aPosition;
 	gl_Position = uMVP * worldPosition;
+	rayOrigin = gl_Position.xyz;
 
 	passTexcoord = textureCoordiantes;
 	passNorm = normal;

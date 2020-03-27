@@ -474,6 +474,7 @@ void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* 
 		//	- modelview
 		//	- modelview for normals
 		//	- per-object animation data
+		a3textureActivate(demoState->tex_skybox_clouds, a3tex_unit02);
 		for (k = 0,
 			currentSceneObject = demoState->planeObject, endSceneObject = demoState->teapotObject;
 			currentSceneObject <= endSceneObject;

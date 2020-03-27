@@ -33,11 +33,13 @@
 //Uniform skybox as a samplerCube
 uniform sampler2D uTex_dm;
 uniform sampler2D uTex_sm;
+uniform sampler2D uImage02;
 
 //Need texture coords, normal, and a reflected vector in
 in vec4 passTexcoord;
 in vec4 passNorm;
 in vec3 reflectedVector;
+in vec3 rayOrigin;
 
 out vec4 rtFragColor;
 
@@ -78,17 +80,65 @@ mat4 leftFaceAtlas = mat4(
 0.0, 0.0, 1.0, 0.0,
 0.125, 0.0, 0.0, 1.0); //Left of Sun
 
-
-//Demo_Pipelines_idle-render.c ln 568, this is where the skybox is drawn, seek data
+//Ray-Plane Intersection Test
+//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
+bool rayPlaneIntersection(vec3 rayDir, vec3 rayOri, vec3 planePt, vec3 planeNrm)
+{
+	float denom = dot(normalize(planeNrm), normalize(rayDir));
+	if (abs(denom) > .000001)
+	{
+		vec3 CmRo = planePt - rayOri;
+		float t = dot(CmRo, planeNrm) / denom;
+		if (t >= 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 vec4 reflectiveTexture(vec4 regTex, float mixVal)
 {
-	//vec4 reflectionCol = texture(samplerCube, reflectedVector);
+	vec4 reflectionCoord = passTexcoord;
+
+	//Check each of the normal planes
+	//Top
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 50.0, 0.0), vec3(0.0, 1.0, 0.0)))
+	{
+		reflectionCoord = topFaceAtlas * passTexcoord;
+	}
+	//Bottom
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, -50.0, 0.0), vec3(0.0, -1.0, 0.0)))
+	{
+		reflectionCoord = bottomFaceAtlas * passTexcoord;
+	}
+	//Left
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(-50.0, 0.0, 0.0), vec3(-1.0, 0.0, 0.0)))
+	{
+		reflectionCoord = leftFaceAtlas * passTexcoord;
+	}
+	//Right
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(50.0, 0.0, 0.0), vec3(1.0, 0.0, 0.0)))
+	{
+		reflectionCoord = rightFaceAtlas * passTexcoord;
+	}
+	//Front
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, 50.0), vec3(0.0, 0.0, 1.0)))
+	{
+		reflectionCoord = frontFaceAtlas * passTexcoord;
+	}
+	//Back
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, -50.0), vec3(0.0, 0.0, -1.0)))
+	{
+		reflectionCoord = backFaceAtlas * passTexcoord;
+	}
+
+	vec4 reflectionCol = texture(uImage02, reflectionCoord.xy);
 
 	//return mix(regTex, reflectionCol, mixVal);
 
-	//DUMMY OUTPUT COLOR
-	return vec4(1.0,0.0,1.0,1.0);
+	//DUMMY OUTPUT ONLY MIRROR OR SOLID COLOR
+	return reflectionCol;//vec4(1.0,0.0,1.0,1.0);
 }
 
 //Insert phong here
