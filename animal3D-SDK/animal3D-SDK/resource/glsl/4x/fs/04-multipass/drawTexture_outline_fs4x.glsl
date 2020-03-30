@@ -59,32 +59,29 @@ void main()
 {
 	vec4 vTexture = textureProj(uTex_dm, textureCoordOut);	
 	
-//	mat3 storage;
-//
-//	for (int x = 0 ; x < 3 ; ++x)
-//	{
-//		for (int y = 0 ; y < 3 ; ++y)
-//		{
-//			vec3 simple = texelFetch(uImage2, ivec2(gl_FragCoord) + ivec2(x-1,y-1),0).rgb;
-//			storage[x][y] = length(simple);
-//		}
-//	}
-//
-//	
-//
-//	float gx = dot(sx[0], storage[0]) + dot(sx[1], storage[1]) + dot(sx[2], storage[2]);
-//	float gy = dot(sy[0], storage[0]) + dot(sy[1], storage[1]) + dot(sy[2], storage[2]);
-//
-//	gx *= gx;
-//	gy *= gy;
-//
-//	float g = sqrt(gx + gy);
-//
-//
-//	rtFragColor = vTexture * vec4(vec3(1-g), 1.0);
-	float dx = 15.0 * (1.0/512.0);
-	float dy = 10.0 * (1.0/512.0);
-	vec2 coord = vec2(dx*floor(textureCoordOut.x/dx),dy*floor(textureCoordOut.y/dy));
-	rtFragColor = texture2D(uTex_dm,coord);
+	mat3 storage;
+
+	for (int x = 0 ; x < 3 ; ++x)
+	{
+		for (int y = 0 ; y < 3 ; ++y)
+		{
+			vec3 simple = texelFetch(uImage2, ivec2(gl_FragCoord) + ivec2(x-1,y-1),0).rgb;
+			storage[x][y] = length(simple);
+		}
+	}
+
+	
+
+	float gx = dot(sx[0], storage[0]) + dot(sx[1], storage[1]) + dot(sx[2], storage[2]);
+	float gy = dot(sy[0], storage[0]) + dot(sy[1], storage[1]) + dot(sy[2], storage[2]);
+
+	gx *= gx;
+	gy *= gy;
+
+	float g = sqrt(gx + gy);
+
+
+	rtFragColor = vTexture * vec4(vec3(1-g), 1.0);
+
 	
 }
