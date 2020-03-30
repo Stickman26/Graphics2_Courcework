@@ -59,14 +59,14 @@ void a3curves_render_controls(a3_DemoState const* demoState, a3_Demo_Curves cons
 	// forward pipeline names
 	a3byte const* renderProgramName[curves_render_max] = {
 		"Phong shading",
-		"Mirror render",
+		"Mirror render", //mirror added
 	};
 
 	// forward display names
 	a3byte const* displayProgramName[curves_display_max] = {
 		"Texture",
 		"Texture with outlines",
-		"Pixelation",
+		"Pixelation", //pixelation added
 	};
 
 	// active camera name
@@ -257,7 +257,7 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 	const a3_DemoStateShaderProgram* renderProgram[curves_pipeline_max][curves_render_max] = {
 		{
 			demoState->prog_drawPhong_multi_forward_mrt,
-			demoState->prog_mirrorTexture,
+			demoState->prog_mirrorTexture, //mirror added
 		}, 
 	};
 
@@ -265,7 +265,7 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 	const a3_DemoStateShaderProgram* displayProgram[curves_display_max] = {
 		demoState->prog_drawTexture,
 		demoState->prog_drawTexture_outline,
-		demoState->prog_drawTexture_pixelation,
+		demoState->prog_drawTexture_pixelation, //pixelation added
 	};
 
 	// framebuffers to which to write based on pipeline mode
@@ -438,12 +438,15 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 		a3shaderUniformBufferActivate(demoState->ubo_transformStack_model, 0);
 		a3shaderUniformBufferActivate(demoState->ubo_pointLight, 4);
 
+		//bind the skybox texture
+		a3textureActivate(demoState->tex_skybox_clouds, a3tex_unit02);
+
 		// individual object requirements: 
 		//	- modelviewprojection
 		//	- modelview
 		//	- modelview for normals
 		//	- per-object animation data
-		a3textureActivate(demoState->tex_skybox_clouds, a3tex_unit02);
+		
 		for (currentSceneObject = demoState->planeObject, endSceneObject = demoState->teapotObject,
 			j = (a3ui32)(currentSceneObject - demoState->sceneObject), k = 0;
 			currentSceneObject <= endSceneObject;
@@ -708,10 +711,10 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, curves_scene_normal);
 			break;
 		case curves_displayPixelation:
-			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt;
+			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt; //set fbo
 			a3real2Set(pixelSize.v, a3recip((a3real)currentReadFBO->frameWidth), a3recip((a3real)currentReadFBO->frameHeight));
-			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);
-			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, pipelines_scene_normal);
+			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);//bind depth
+			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, pipelines_scene_normal);//bind color
 			break;
 		}
 

@@ -42,13 +42,20 @@ void main() {
 	
 	vec4 worldPos = aPosition;
 	gl_Position = uMVP * worldPos;
+	//determine the origin for the ray
 	rayOrigin = gl_Position.xyz;
 
+	//set texcoord
 	passTexcoord = uAtlas * aTexcoord;
+	//set the normal
 	passNorm = uMV_nrm * aNormal;
+	//normal vector for the calculation of the reflected vector
 	vec4 normNormal = normalize(aNormal);
 
+	//get the camera position
 	vec3 cameraPos = (uMV * aPosition).xyz;
+	//get the viewing vector from the camera
 	vec3 viewVector = normalize(worldPos.xyz - cameraPos);
+	//get the relected vector from the viewing vector and the normalized vector
 	reflectedVector = reflect(viewVector, normNormal.xyz).xyz;
 }

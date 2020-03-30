@@ -83,22 +83,22 @@ void a3curves_update(a3_DemoState* demoState, a3_Demo_Curves* demoMode, a3f64 dt
 		//		-> update parameter in range [0, 1)
 		// update controller
 
-		if (demoState->segmentCount > 0)
+		if (demoState->segmentCount > 0) //if animating
 		{
-			demoState->segmentTime += (float)dt;
-			if (demoState->segmentTime > demoState->segmentDuration)
+			demoState->segmentTime += (float)dt; //increase the total time that segment has been active
+			if (demoState->segmentTime > demoState->segmentDuration) //if the segment has hit the max time allowed
 			{
-				demoState->segmentTime -= demoState->segmentDuration;
+				demoState->segmentTime -= demoState->segmentDuration; //reset the segment time
 				if (demoState->segmentIndex < demoState->segmentCount - 1) //make sure we don't go out of bounds
 				{
-					demoState->segmentIndex++;
+					demoState->segmentIndex++;//go to the next segment
 				}
 				else
 				{
-					demoState->segmentIndex = 0;
+					demoState->segmentIndex = 0; //if at the last segement, go back to the first one
 				}
 			}
-			demoState->segmentParam = demoState->segmentTime * demoState->segmentDurationInv;
+			demoState->segmentParam = demoState->segmentTime * demoState->segmentDurationInv; //get a value of 0 to 1 for the segment parameter
 		}
 
 

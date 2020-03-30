@@ -731,21 +731,20 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawCurveSegment_gs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
 
-	currentDemoProg = demoState->prog_drawPhong_multi_mrt;
-	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-mul-fwd-mrt");
-	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
-	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_forward_mrt_fs->shader);
 	
-	//Midterm
+	//Midterm (2 new programs created, 2 new fragment shaders, 1 new vertex shader
+	//Phong
+	currentDemoProg = demoState->prog_drawPhong_multi_mrt;
+	//pixelation
 	currentDemoProg = demoState->prog_drawTexture_pixelation;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-pixelation");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_pixelation_fs->shader);
-
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-pixelation"); //create new program
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader); //already existing vertex shader
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_pixelation_fs->shader); //new fragment shader
+	//mirror
 	currentDemoProg = demoState->prog_mirrorTexture;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-reflective");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_fs->shader);
+	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-reflective"); //create new program
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_vs->shader); //new vertex shader
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_fs->shader); //new fragment shader
 
 
 

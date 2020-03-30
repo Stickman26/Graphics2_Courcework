@@ -25,18 +25,23 @@
 #version 410
 
 uniform sampler2D uTex_dm;
-uniform sampler2D uTex_sm;
-uniform sampler2D uImage01;
-uniform sampler2D uImage02;
-
-//Toon outline
 
 in vec4 textureCoordOut;
+
 out vec4 rtFragColor;
+
+vec2 getModifiedCoordinates() //returns modified coordinates
+{
+	//modify the floors of the coordinates for pixelation
+	float dx = 10.0 * (1.0/512.0);
+	float dy = 10.0 * (1.0/512.0);
+	return vec2(dx*floor(textureCoordOut.x/dx),dy*floor(textureCoordOut.y/dy));
+}
+
 void main()
 {
-	float dx = 15.0 * (1.0/512.0);
-	float dy = 10.0 * (1.0/512.0);
-	vec2 coord = vec2(dx*floor(textureCoordOut.x/dx),dy*floor(textureCoordOut.y/dy));
+	vec2 coord = getModifiedCoordinates(); //gets modified coordinates
+
+	//sample the texture with the modified coordinates to create the pixelation effect
 	rtFragColor = texture2D(uTex_dm,coord);
 }
