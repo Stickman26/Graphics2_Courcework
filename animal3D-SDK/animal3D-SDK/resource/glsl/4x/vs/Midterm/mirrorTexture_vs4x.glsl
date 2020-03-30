@@ -39,14 +39,14 @@ out vec3 rayOrigin;
 void main() {
 	
 	vec4 worldPos = aPosition;
-	gl_Position = uMVP * worldPosition;
+	gl_Position = uMVP * worldPos;
 	rayOrigin = gl_Position.xyz;
 
-	passTexcoord = textureCoordiantes;
-	passNorm = normal;
-	normNormal = normalize(normal);
+	passTexcoord = aTexcoord;
+	passNorm = aNormal;
+	vec4 normNormal = normalize(aNormal);
 
-	vec3 cameraPos = uMV * aPosition;
+	vec3 cameraPos = (uMV * aPosition).xyz;
 	vec3 viewVector = normalize(worldPos.xyz - cameraPos);
-	reflectedVector = reflect(viewVector, normNormal);
+	reflectedVector = reflect(viewVector, normNormal.xyz).xyz;
 }

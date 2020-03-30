@@ -431,6 +431,9 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// 07-curves
 			a3_DemoStateShader
 				passTangentBasis_transform_instanced_vs[1];
+			//Midterm
+			a3_DemoStateShader
+				mirrorTexture_vs[1];
 
 			// geometry shaders
 			// 07-curves
@@ -475,6 +478,7 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// 07-curves
 			a3_DemoStateShader
 				drawPhong_multi_forward_mrt_fs[1];
+			//Midterm
 			a3_DemoStateShader
 				drawTexture_pixelation_fs[1],
 				mirrorTexture_fs[1];
@@ -503,6 +507,8 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passBiasedClipCoord_transform_instanced_vs4x.glsl" } } },
 			// 07-curves
 			{ { { 0 },	"shdr-vs:pass-tangent-trans-inst",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-curves/passTangentBasis_transform_instanced_vs4x.glsl" } } },
+			// Midterm
+			{ { { 0 },	"shdr-vs:pass-reflective",			a3shader_vertex  ,	1,{ A3_DEMO_VS"Midterm/mirrorTexture_vs4x.glsl" } } },
 
 			// gs
 			// 07-curves
@@ -729,14 +735,17 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-mul-fwd-mrt");
 	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
 	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_forward_mrt_fs->shader);
+	
+	//Midterm
 	currentDemoProg = demoState->prog_drawTexture_pixelation;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-pixelation");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_pixelation_fs->shader);
-	/*currentDemoProg = demoState->prog_mirrorTexture;
+
+	currentDemoProg = demoState->prog_mirrorTexture;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-reflective");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_fs->shader);*/
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.mirrorTexture_fs->shader);
 
 
 

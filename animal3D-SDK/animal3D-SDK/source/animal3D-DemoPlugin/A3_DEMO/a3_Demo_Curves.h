@@ -58,6 +58,7 @@ extern "C"
 	enum a3_Demo_Curves_RenderProgramName
 	{
 		curves_renderPhong,			// Phong shading
+		curves_renderMirror,		// Mirror texture
 
 		curves_render_max
 	};

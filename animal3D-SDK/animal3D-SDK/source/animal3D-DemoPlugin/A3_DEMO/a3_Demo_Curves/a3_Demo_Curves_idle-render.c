@@ -59,6 +59,7 @@ void a3curves_render_controls(a3_DemoState const* demoState, a3_Demo_Curves cons
 	// forward pipeline names
 	a3byte const* renderProgramName[curves_render_max] = {
 		"Phong shading",
+		"Mirror render",
 	};
 
 	// forward display names
@@ -256,7 +257,8 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 	const a3_DemoStateShaderProgram* renderProgram[curves_pipeline_max][curves_render_max] = {
 		{
 			demoState->prog_drawPhong_multi_forward_mrt,
-		},
+			demoState->prog_mirrorTexture,
+		}, 
 	};
 
 	// display shader programs
