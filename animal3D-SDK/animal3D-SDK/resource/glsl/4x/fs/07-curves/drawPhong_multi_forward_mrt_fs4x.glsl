@@ -217,12 +217,12 @@ vec4 reflectiveTexture(vec4 regTex, float mixVal)
 
 	//Check each of the normal planes
 	//Top
-	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, -50.0, 0.0), vec3(0.0, 1.0, 0.0)))
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, -50.0, 0.0), vec3(0.0, -1.0, 0.0)))
 	{
 		reflectionCoord = topFaceAtlas * vTexcoord_atlas;
 	}
 	//Bottom
-	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 50.0, 0.0), vec3(0.0, -1.0, 0.0)))
+	else if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 50.0, 0.0), vec3(0.0, 1.0, 0.0)))
 	{
 		reflectionCoord = bottomFaceAtlas * vTexcoord_atlas;
 	}
@@ -232,7 +232,7 @@ vec4 reflectiveTexture(vec4 regTex, float mixVal)
 		reflectionCoord = leftFaceAtlas * vTexcoord_atlas;
 	}
 	//Right
-	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(-50.0, 0.0, 0.0), vec3(1.0, 0.0, 0.0)))
+	else if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(-50.0, 0.0, 0.0), vec3(1.0, 0.0, 0.0)))
 	{
 		reflectionCoord = rightFaceAtlas * vTexcoord_atlas;
 	}
@@ -242,17 +242,17 @@ vec4 reflectiveTexture(vec4 regTex, float mixVal)
 		reflectionCoord = frontFaceAtlas * vTexcoord_atlas;
 	}
 	//Back
-	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, 50.0), vec3(0.0, 0.0, -1.0)))
+	else if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, 50.0), vec3(0.0, 0.0, -1.0)))
 	{
 		reflectionCoord = backFaceAtlas * vTexcoord_atlas;
 	}
 
 	vec4 reflectionCol = texture(uImage02, reflectionCoord.xy);
 
-	//return mix(regTex, reflectionCol, mixVal);
+	return mix(regTex, reflectionCol, mixVal); // Mix the normal texture of the object with the base material of the object
 
-	//DUMMY OUTPUT ONLY MIRROR OR SOLID COLOR
-	return reflectionCol;
+	//DUMMY OUTPUT ONLY MIRROR
+	//return reflectionCol;
 }
 
 void main()
@@ -305,7 +305,7 @@ void main()
 					+ sample_sm.rgb * specularLightTotal;
 	phongColor.a = sample_dm.a;
 
-	rtFragColor = reflectiveTexture(phongColor, 0.6);
+	rtFragColor = reflectiveTexture(phongColor, 0.5); //half mirrored surface
 	rtFragColor.a = sample_dm.a;
 
 	// output attributes

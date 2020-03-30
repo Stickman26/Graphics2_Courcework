@@ -37,6 +37,7 @@ layout (location = 11)	in vec4 aBitangent;
 layout (location = 2)	in vec4 aNormal;
 layout (location = 0)	in vec4 aPosition;
 
+uniform mat4 uMVPB_other;
 
 struct sMatrixStack
 {
@@ -58,8 +59,8 @@ out vbVertexData {
 	flat int vVertexID, vInstanceID, vModelID;
 };
 
-out vec3 reflectedVector;
-out vec3 rayOrigin;
+out vec3 reflectedVector; //direction of the reflected ray
+out vec3 rayOrigin; //origin point of reflected ray
 
 void main()
 {
