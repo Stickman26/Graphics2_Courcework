@@ -67,6 +67,7 @@ extern "C"
 	{
 		curves_displayTexture,		// display simple texture
 		curves_displayOutline,		// display texture with outlines
+		curves_displayPixelation,
 
 		curves_display_max
 	};

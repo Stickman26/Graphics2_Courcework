@@ -65,6 +65,7 @@ void a3curves_render_controls(a3_DemoState const* demoState, a3_Demo_Curves cons
 	a3byte const* displayProgramName[curves_display_max] = {
 		"Texture",
 		"Texture with outlines",
+		"Pixelation",
 	};
 
 	// active camera name
@@ -262,6 +263,7 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 	const a3_DemoStateShaderProgram* displayProgram[curves_display_max] = {
 		demoState->prog_drawTexture,
 		demoState->prog_drawTexture_outline,
+		demoState->prog_drawTexture_pixelation,
 	};
 
 	// framebuffers to which to write based on pipeline mode
@@ -701,6 +703,12 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 			a3shaderUniformSendFloat(a3unif_vec2, currentDemoProgram->uSize, 1, pixelSize.v);	// use as actual pixel size
 			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);
 			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, curves_scene_normal);
+			break;
+		case curves_displayPixelation:
+			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt;
+			a3real2Set(pixelSize.v, a3recip((a3real)currentReadFBO->frameWidth), a3recip((a3real)currentReadFBO->frameHeight));
+			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);
+			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, pipelines_scene_normal);
 			break;
 		}
 
