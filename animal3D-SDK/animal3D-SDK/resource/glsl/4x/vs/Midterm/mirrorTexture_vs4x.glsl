@@ -26,6 +26,8 @@
 
 uniform mat4 uMVP;
 uniform mat4 uMV;
+uniform mat4 uAtlas;
+uniform mat4 uMV_nrm;
 
 layout (location = 8)	in vec4 aTexcoord;
 layout (location = 2)	in vec4 aNormal;
@@ -42,8 +44,8 @@ void main() {
 	gl_Position = uMVP * worldPos;
 	rayOrigin = gl_Position.xyz;
 
-	passTexcoord = aTexcoord;
-	passNorm = aNormal;
+	passTexcoord = uAtlas * aTexcoord;
+	passNorm = uMV_nrm * aNormal;
 	vec4 normNormal = normalize(aNormal);
 
 	vec3 cameraPos = (uMV * aPosition).xyz;

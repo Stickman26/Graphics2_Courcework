@@ -102,7 +102,7 @@ vec4 reflectiveTexture(vec4 regTex, float mixVal)
 	vec4 reflectionCoord = passTexcoord;
 
 	//Check each of the normal planes
-	//Top
+	/*//Top
 	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 50.0, 0.0), vec3(0.0, 1.0, 0.0)))
 	{
 		reflectionCoord = topFaceAtlas * passTexcoord;
@@ -131,20 +131,20 @@ vec4 reflectiveTexture(vec4 regTex, float mixVal)
 	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, -50.0), vec3(0.0, 0.0, -1.0)))
 	{
 		reflectionCoord = backFaceAtlas * passTexcoord;
-	}
+	}*/
 
-	vec4 reflectionCol = texture(uImage02, reflectionCoord.xy);
+	vec4 reflectionCol = textureProj(uImage02, reflectionCoord);
 
 	//return mix(regTex, reflectionCol, mixVal);
 
 	//DUMMY OUTPUT ONLY MIRROR OR SOLID COLOR
-	return reflectionCol;//vec4(1.0,0.0,1.0,1.0);
+	return reflectionCol;
 }
 
 //Insert phong here
 
 void main() 
 {
-	vec4 phongVal = vec4(0.0,0.0,0.0,1.0);
-	rtFragColor = reflectiveTexture(phongVal , 0.6);
+	vec4 phongVal = texture(uTex_dm, passTexcoord.xy);
+	rtFragColor = phongVal;//reflectiveTexture(phongVal , 0.6);
 }
