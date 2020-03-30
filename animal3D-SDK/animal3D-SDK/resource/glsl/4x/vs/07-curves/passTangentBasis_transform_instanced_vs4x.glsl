@@ -58,6 +58,8 @@ out vbVertexData {
 	flat int vVertexID, vInstanceID, vModelID;
 };
 
+out vec3 reflectedVector;
+out vec3 rayOrigin;
 
 void main()
 {
@@ -72,4 +74,9 @@ void main()
 	vTangentBasis_view = t.modelViewNormalMat * tangentBasis_object;
 	vTangentBasis_view[3] = t.modelViewMat * aPosition;
 	gl_Position = t.modelViewProjectionMat * aPosition;
+
+	rayOrigin = (t.modelViewProjectionMat * aPosition).xyz;
+	vec3 viewVector = normalize(aPosition.xyz - rayOrigin);
+	vec4 normNormal = normalize(t.modelViewNormalMat * aNormal);
+	reflectedVector = reflect(viewVector, normNormal.xyz).xyz;
 }

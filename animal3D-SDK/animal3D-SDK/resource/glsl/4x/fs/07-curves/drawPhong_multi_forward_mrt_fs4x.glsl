@@ -35,7 +35,6 @@ in vbVertexData {
 	flat int vVertexID, vInstanceID, vModelID;
 };
 
-
 struct sPointLight
 {
 	vec4 worldPos;
@@ -54,7 +53,7 @@ uniform ubPointLight {
 
 uniform int uLightCt;
 uniform vec4 uColor;
-uniform sampler2D uTex_dm, uTex_sm;
+uniform sampler2D uTex_dm, uTex_sm, uImage02;
 
 
 // final color
@@ -153,6 +152,109 @@ void addPhongComponents(
 	specularLightTotal += attenuationColor * specularCoefficient;
 }
 
+//Need texture coords, normal, and a reflected vector in
+in vec3 reflectedVector;
+in vec3 rayOrigin;
+
+
+//Matrixes for using the skybox texture in a pseduo cube map fasion
+mat4 frontFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0, 
+0.0, 0.25, 0.0, 0.0, 
+0.0, 0.0, 1.0, 0.0, 
+0.375, 0.0, 0.0, 1.0); // Mid Sun
+
+mat4 topFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.375, 0.25, 0.0, 1.0); //Above the Sun
+
+mat4 backFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.375, 0.5, 0.0, 1.0); //Below Vortex
+
+mat4 bottomFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0, 
+0.0, 0.0, 1.0, 0.0, 
+0.375, 0.75, 0.0, 1.0); // Mid Vortex
+
+mat4 rightFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.625, 0.0, 0.0, 1.0); //Right of Sun
+
+mat4 leftFaceAtlas = mat4(
+0.25, 0.0, 0.0, 0.0,
+0.0, 0.25, 0.0, 0.0,
+0.0, 0.0, 1.0, 0.0,
+0.125, 0.0, 0.0, 1.0); //Left of Sun
+
+//Ray-Plane Intersection Test
+//https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
+bool rayPlaneIntersection(vec3 rayDir, vec3 rayOri, vec3 planePt, vec3 planeNrm)
+{
+	float denom = dot(normalize(planeNrm), normalize(rayDir));
+	if (abs(denom) > .000001)
+	{
+		vec3 CmRo = planePt - rayOri;
+		float t = dot(CmRo, planeNrm) / denom;
+		if (t >= 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+vec4 reflectiveTexture(vec4 regTex, float mixVal)
+{
+	vec4 reflectionCoord = vTexcoord_atlas;
+
+	//Check each of the normal planes
+	//Top
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, -50.0, 0.0), vec3(0.0, 1.0, 0.0)))
+	{
+		reflectionCoord = topFaceAtlas * vTexcoord_atlas;
+	}
+	//Bottom
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 50.0, 0.0), vec3(0.0, -1.0, 0.0)))
+	{
+		reflectionCoord = bottomFaceAtlas * vTexcoord_atlas;
+	}
+	//Left
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(50.0, 0.0, 0.0), vec3(-1.0, 0.0, 0.0)))
+	{
+		reflectionCoord = leftFaceAtlas * vTexcoord_atlas;
+	}
+	//Right
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(-50.0, 0.0, 0.0), vec3(1.0, 0.0, 0.0)))
+	{
+		reflectionCoord = rightFaceAtlas * vTexcoord_atlas;
+	}
+	//Front
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, -50.0), vec3(0.0, 0.0, 1.0)))
+	{
+		reflectionCoord = frontFaceAtlas * vTexcoord_atlas;
+	}
+	//Back
+	if (rayPlaneIntersection(reflectedVector.xyz, rayOrigin.xyz, vec3(0.0, 0.0, 50.0), vec3(0.0, 0.0, -1.0)))
+	{
+		reflectionCoord = backFaceAtlas * vTexcoord_atlas;
+	}
+
+	vec4 reflectionCol = texture(uImage02, reflectionCoord.xy);
+
+	//return mix(regTex, reflectionCol, mixVal);
+
+	//DUMMY OUTPUT ONLY MIRROR OR SOLID COLOR
+	return reflectionCol;
+}
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are colored based on model index
@@ -197,9 +299,13 @@ void main()
 
 
 	// final color
-	rtFragColor.rgb = ambient
+	vec4 phongColor;
+	phongColor.rgb = ambient
 					+ sample_dm.rgb * diffuseLightTotal
 					+ sample_sm.rgb * specularLightTotal;
+	phongColor.a = sample_dm.a;
+
+	rtFragColor = reflectiveTexture(phongColor, 0.6);
 	rtFragColor.a = sample_dm.a;
 
 	// output attributes
