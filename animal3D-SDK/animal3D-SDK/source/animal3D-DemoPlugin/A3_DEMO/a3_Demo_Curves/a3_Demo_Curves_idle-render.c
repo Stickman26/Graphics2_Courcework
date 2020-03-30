@@ -443,6 +443,7 @@ void a3curves_render(a3_DemoState const* demoState, a3_Demo_Curves const* demoMo
 		//	- modelview
 		//	- modelview for normals
 		//	- per-object animation data
+		a3textureActivate(demoState->tex_skybox_clouds, a3tex_unit02);
 		for (currentSceneObject = demoState->planeObject, endSceneObject = demoState->teapotObject,
 			j = (a3ui32)(currentSceneObject - demoState->sceneObject), k = 0;
 			currentSceneObject <= endSceneObject;
