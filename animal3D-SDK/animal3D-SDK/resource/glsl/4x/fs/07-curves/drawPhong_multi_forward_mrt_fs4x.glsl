@@ -305,7 +305,7 @@ void main()
 					+ sample_sm.rgb * specularLightTotal;
 	phongColor.a = sample_dm.a;
 
-	rtFragColor = reflectiveTexture(phongColor, 0.5); //half mirrored surface
+	rtFragColor = reflectiveTexture(phongColor, 0.0); //half mirrored surface
 	rtFragColor.a = sample_dm.a;
 
 	// output attributes

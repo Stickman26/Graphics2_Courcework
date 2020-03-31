@@ -380,6 +380,9 @@ extern "C"
 					prog_drawColorizedHierarchy_instanced[1],	// draw instanced hierarchical model with colorization per instance
 					prog_drawPhong_multi_forward_mrt_morph[1],	// draw Phong with forward point lights and MRT with morphing
 					prog_drawOverlays_tb_wf_morph[1];			// draw overlays on morphed mesh
+				a3_DemoStateShaderProgram
+					prog_mirrorTexture[1],
+					prog_drawTexture_pixelation[1];
 			};
 		};
 

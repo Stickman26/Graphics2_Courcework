@@ -58,6 +58,7 @@ extern "C"
 	enum a3_Demo_Keyframes_RenderProgramName
 	{
 		keyframes_renderPhong,			// Phong shading
+		keyframes_renderMirror,			// Mirror shading
 
 		keyframes_render_max
 	};
@@ -67,6 +68,7 @@ extern "C"
 	{
 		keyframes_displayTexture,		// display simple texture
 		keyframes_displayOutline,		// display texture with outlines
+		keyframes_pixelation,			// pixelation shader
 
 		keyframes_display_max
 	};

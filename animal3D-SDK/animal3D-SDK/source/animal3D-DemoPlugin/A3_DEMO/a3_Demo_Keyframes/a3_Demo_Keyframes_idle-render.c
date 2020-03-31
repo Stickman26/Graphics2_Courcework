@@ -761,7 +761,7 @@ void a3keyframes_render(a3_DemoState const* demoState, a3_Demo_Keyframes const* 
 			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);
 			a3framebufferBindColorTexture(currentReadFBO, a3tex_unit02, keyframes_scene_normal);
 			break;
-		case curves_displayPixelation:
+		case keyframes_pixelation:
 			currentReadFBO = demoState->fbo_scene_c16d24s8_mrt; //set fbo
 			a3real2Set(pixelSize.v, a3recip((a3real)currentReadFBO->frameWidth), a3recip((a3real)currentReadFBO->frameHeight));
 			a3framebufferBindDepthTexture(currentReadFBO, a3tex_unit01);//bind depth

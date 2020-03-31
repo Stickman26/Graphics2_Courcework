@@ -45,7 +45,7 @@ extern inline a3i32 a3kinematicsSolveForwardPartial(const a3_HierarchyState *hie
 
 		for (i = firstIndex; i < end; ++i)
 		{
-			// ****TO-DO: implement forward kinematics algorithm
+			// ****TO-DO: implement forward kinematics algorithm 5
 
 		}
 
