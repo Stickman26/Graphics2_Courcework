@@ -155,6 +155,36 @@ void a3keyframes_update(a3_DemoState* demoState, a3_Demo_Keyframes* demoMode, a3
 	currentHierarchyPoseGroup = currentHierarchyState->poseGroup;
 	currentHierarchy = currentHierarchyPoseGroup->hierarchy;
 
+	if (!demoMode->editingJoint)
+		demoState->segmentTime += (float)dt; //increase the total time that segment has been active
+	if (demoState->segmentTime > demoState->segmentDuration) //if the segment has hit the max time allowed
+	{
+
+		demoState->segmentTime -= demoState->segmentDuration; //reset the segment time
+		if (demoState->segmentIndex < demoState->segmentCount - 1) //make sure we don't go out of bounds
+		{
+			demoState->segmentIndex++;//go to the next segment
+		}
+		else
+		{
+			demoState->segmentIndex = 0; //if at the last segement, go back to the first one
+		}
+	}
+	demoState->segmentParam = demoState->segmentTime * demoState->segmentDurationInv; //get a value of 0 to 1 for the segment parameter
+
+	for (unsigned int i = 0; i < currentHierarchy->numNodes; i++)
+	{
+		a3real4Bezier1(currentHierarchyState->localPose->nodePose[i].translation.v,
+			(currentHierarchyPoseGroup->pose + 0)->nodePose[i].translation.v,
+			(currentHierarchyPoseGroup->pose + 1)->nodePose[i].translation.v, demoState->segmentParam);
+		a3real4Bezier1(currentHierarchyState->localPose->nodePose[i].orientation.v,
+			(currentHierarchyPoseGroup->pose + 0)->nodePose[i].orientation.v,
+			(currentHierarchyPoseGroup->pose + 1)->nodePose[i].orientation.v, demoState->segmentParam);
+		a3real4Bezier1(currentHierarchyState->localPose->nodePose[i].scale.v,
+			(currentHierarchyPoseGroup->pose + 0)->nodePose[i].scale.v,
+			(currentHierarchyPoseGroup->pose + 1)->nodePose[i].scale.v, demoState->segmentParam);
+	}
+
 	a3hierarchyPoseCopy(currentHierarchyState->localPose,
 		currentHierarchyPoseGroup->pose + 0, currentHierarchy->numNodes);
 	a3hierarchyPoseConvert(currentHierarchyState->localSpace,

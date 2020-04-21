@@ -39,20 +39,49 @@
 //		(e.g. level in hierarchy from root node)
 //	4) copy selected color to outbound color
 
+
 layout (location = 0) in vec4 aPosition;
+
+uniform int uIndex;
 
 uniform ubTransformMVP {
 	mat4 uMVP[MAX_INSTANCES];
 };
 
+struct hierarchyNode {
+	int nameData[8];
+	int index;
+	int parentIndex;
+};
+
 uniform vec4 uColor[MAX_COLORS];
+uniform ubHierarchy{
+	hierarchyNode nodes[MAX_NODES];
+};
 
 out vec4 vColor;
+
+int findDepthColor(int index);
 
 void main()
 {
 	gl_Position = uMVP[gl_InstanceID] * aPosition;
 
 	// DUMMY OUTPUT: select first color
-	vColor = uColor[0];
+	vColor = uColor[findDepthColor(gl_InstanceID)];
+}
+
+int findDepthColor(int index)
+{
+	int i = nodes[index].parentIndex;
+	int count = 0;
+
+	while(i != -1)
+	{
+		count++;
+		i = nodes[i].parentIndex;
+	}
+
+	return count;
+
 }
