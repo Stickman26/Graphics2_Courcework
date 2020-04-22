@@ -71,12 +71,16 @@
 #define A3_DEMO_FS		A3_DEMO_GLSL"4x/fs/"
 #define A3_DEMO_CS		A3_DEMO_GLSL"4x/cs/"
 
+#define LSIZ 128 
+#define RSIZ 128 
 
 //-----------------------------------------------------------------------------
 
 #include "../a3_DemoState.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 //-----------------------------------------------------------------------------
@@ -412,6 +416,26 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 // utility to load shaders
 void a3demo_loadShaders(a3_DemoState *demoState)
 {
+	char line[RSIZ][LSIZ];
+	//char fname[50];
+	FILE* fptr = NULL;
+	int i4 = 0;
+	int tot = 0;
+	printf("\n\n Read the file and store the lines into an array :\n");
+	printf("------------------------------------------------------\n");
+	printf(" Input the filename to be opened : ");
+	//scanf("%s", fname);
+	fptr = fopen("../../../../resource/ShaderList.txt", "r");
+	while (fgets(line[i4], LSIZ, fptr))
+	{
+		line[i4][strlen(line[i4]) - 1] = '\0';
+		i4++;
+	}
+	tot = i4;
+	for (int i5 = 0; i5 < tot; ++i5)
+	{
+		printf(" %s\n", line[i5]);
+	}
 	// direct to demo programs
 	a3_DemoStateShaderProgram *currentDemoProg;
 	a3i32 flag;
@@ -514,10 +538,13 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// ****REMINDER: 'Encoded' shaders are available for proof-of-concept
 			//	testing ONLY!  Insert /e before file names.
 			// DO NOT SUBMIT WORK USING ENCODED SHADERS OR YOU WILL GET ZERO!!!
+			//./resource/animal3d-data/animal3D-demoinfo-example.txt"
 
+
+			
 			// vs
 			// base
-			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ A3_DEMO_VS,line[1] } } },
 			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_instanced_vs4x.glsl" } } },
