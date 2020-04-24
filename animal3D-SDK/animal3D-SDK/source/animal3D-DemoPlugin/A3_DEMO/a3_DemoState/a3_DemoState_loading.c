@@ -71,12 +71,16 @@
 #define A3_DEMO_FS		A3_DEMO_GLSL"4x/fs/"
 #define A3_DEMO_CS		A3_DEMO_GLSL"4x/cs/"
 
+#define LSIZ 128 
+#define RSIZ 128 
 
 //-----------------------------------------------------------------------------
 
 #include "../a3_DemoState.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 //-----------------------------------------------------------------------------
@@ -412,6 +416,58 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 // utility to load shaders
 void a3demo_loadShaders(a3_DemoState *demoState)
 {
+	char line[RSIZ][LSIZ];
+	char line2[RSIZ][LSIZ];
+	char line3[RSIZ][LSIZ];
+
+	char vertexLines[RSIZ][LSIZ];
+	char geometryLines[RSIZ][LSIZ];
+	char fragmentLines[RSIZ][LSIZ];
+	//char fname[50];
+	FILE* fptr = NULL;
+	int vertexShaderCount = 0;
+	int geometryShaderCount = 0;
+	int fragmentShaderCount = 0;
+	int tot = 0;
+	printf("\n\n Read the file and store the lines into an array :\n");
+	printf("------------------------------------------------------\n");
+	printf(" Input the filename to be opened : ");
+	//scanf("%s", fname);
+	fptr = fopen("../../../../resource/VertexShaderList.txt", "r");
+	while (fgets(line[vertexShaderCount], LSIZ, fptr))
+	{
+		strcpy(vertexLines[vertexShaderCount], "../../../../resource/glsl/4x/vs/");
+		strcat(vertexLines[vertexShaderCount], line[vertexShaderCount]);
+		strtok(vertexLines[vertexShaderCount], "\n");
+		line[vertexShaderCount][strlen(line[vertexShaderCount]) - 1] = '\0';
+		vertexShaderCount++;
+	}
+	fclose(fptr);
+	fptr = fopen("../../../../resource/GeometryShaderList.txt", "r");
+	while (fgets(line2[geometryShaderCount], LSIZ, fptr))
+	{
+		strcpy(geometryLines[geometryShaderCount], "../../../../resource/glsl/4x/gs/");
+		strcat(geometryLines[geometryShaderCount], line2[geometryShaderCount]);
+		strtok(geometryLines[geometryShaderCount], "\n");
+		line2[geometryShaderCount][strlen(line2[geometryShaderCount]) - 1] = '\0';
+		geometryShaderCount++;
+	}
+	fclose(fptr);
+	fptr = fopen("../../../../resource/FragmentShaderList.txt", "r");
+	while (fgets(line3[fragmentShaderCount], LSIZ, fptr))
+	{
+		strcpy(fragmentLines[fragmentShaderCount], "../../../../resource/glsl/4x/fs/");
+		strcat(fragmentLines[fragmentShaderCount], line3[fragmentShaderCount]);
+		strtok(fragmentLines[fragmentShaderCount], "\n");
+		line3[fragmentShaderCount][strlen(line3[fragmentShaderCount]) - 1] = '\0';
+		fragmentShaderCount++;
+	}
+	fclose(fptr);
+	tot = vertexShaderCount;
+	for (int i5 = 0; i5 < tot; ++i5)
+	{
+		printf(" %s\n", vertexLines[i5]);
+	}
 	// direct to demo programs
 	a3_DemoStateShaderProgram *currentDemoProg;
 	a3i32 flag;
@@ -514,64 +570,67 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// ****REMINDER: 'Encoded' shaders are available for proof-of-concept
 			//	testing ONLY!  Insert /e before file names.
 			// DO NOT SUBMIT WORK USING ENCODED SHADERS OR YOU WILL GET ZERO!!!
+			//./resource/animal3d-data/animal3D-demoinfo-example.txt"
 
+
+			
 			// vs
 			// base
-			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ vertexLines[0] } } },
+			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ vertexLines[1] } } },
+			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ vertexLines[2] } } },
+			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ vertexLines[3] } } },
+			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ vertexLines[4] } } },
 			// 02-shading
-			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/e/passTexcoord_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-light-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/e/passLightingData_transform_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ vertexLines[5] } } },
+			{ { { 0 },	"shdr-vs:pass-light-trans",			a3shader_vertex  ,	1,{ vertexLines[6] } } },
 			// 04-multipass
-			{ { { 0 },	"shdr-vs:pass-light-shadow-trans",	a3shader_vertex  ,	1,{ A3_DEMO_VS"04-multipass/e/passLightingData_shadowCoord_transform_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-light-shadow-trans",	a3shader_vertex  ,	1,{ vertexLines[7] } } },
 			// 06-deferred
-			{ { { 0 },	"shdr-vs:pass-atlas-tex-trans",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passAtlasTexcoord_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-light-trans-bias",	a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passLightingData_transform_bias_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passBiasedClipCoord_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-atlas-tex-trans",		a3shader_vertex  ,	1,{ vertexLines[8] } } },
+			{ { { 0 },	"shdr-vs:pass-light-trans-bias",	a3shader_vertex  ,	1,{ vertexLines[9] } } },
+			{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ vertexLines[10] } } },
 			// 07-curves
-			{ { { 0 },	"shdr-vs:pass-tangent-trans-inst",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-curves/passTangentBasis_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tangent-trans-inst",	a3shader_vertex  ,	1,{ vertexLines[11] } } },
 			// 07-keyframes
-			{ { { 0 },	"shdr-vs:pass-col-hierarchy-t-i",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/passColor_hierarchy_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-tb-trans-morph",		a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/passTangentBasis_transform_instanced_morph_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-col-hierarchy-t-i",	a3shader_vertex  ,	1,{ vertexLines[12] } } },
+			{ { { 0 },	"shdr-vs:pass-tb-trans-morph",		a3shader_vertex  ,	1,{ vertexLines[13] } } },
 
 			// gs
 			// 07-curves
-			{ { { 0 },	"shdr-gs:draw-curve-segment",		a3shader_geometry,	1,{ A3_DEMO_GS"07-curves/e/drawCurveSegment_gs4x.glsl" } } },
-			{ { { 0 },	"shdr-gs:draw-overlays-tb-wire",	a3shader_geometry,	1,{ A3_DEMO_GS"07-curves/e/drawOverlays_tangents_wireframe_gs4x.glsl" } } },
+			{ { { 0 },	"shdr-gs:draw-curve-segment",		a3shader_geometry,	1,{ geometryLines[0] } } },
+			{ { { 0 },	"shdr-gs:draw-overlays-tb-wire",	a3shader_geometry,	1,{ geometryLines[1] } } },
 
 			// fs
 			// base
-			{ { { 0 },	"shdr-fs:draw-col-unif",			a3shader_fragment,	1,{ A3_DEMO_FS"drawColorUnif_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ A3_DEMO_FS"drawColorAttrib_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-col-unif",			a3shader_fragment,	1,{ fragmentLines[0] } } },
+			{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ fragmentLines[1] } } },
 			// 02-shading
-			{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawTexture_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Lambert-multi",		a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawLambert_multi_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi",			a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawPhong_multi_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-nonphoto-multi",		a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawNonphoto_multi_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ fragmentLines[2] } } },
+			{ { { 0 },	"shdr-fs:draw-Lambert-multi",		a3shader_fragment,	1,{ fragmentLines[3] } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-multi",			a3shader_fragment,	1,{ fragmentLines[4] } } },
+			{ { { 0 },	"shdr-fs:draw-nonphoto-multi",		a3shader_fragment,	1,{ fragmentLines[5] } } },
 			// 03-framebuffer
-			{ { { 0 },	"shdr-fs:draw-tex-mrt",				a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawTexture_mrt_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-tex-colormanip",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawTexture_colorManip_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-tex-coordmanip",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawTexture_coordManip_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Lambert-multi-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawLambert_multi_mrt_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi-mrt",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawPhong_multi_mrt_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-nonphoto-multi-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawNonphoto_multi_mrt_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-tex-mrt",				a3shader_fragment,	1,{ fragmentLines[6] } } },
+			{ { { 0 },	"shdr-fs:draw-tex-colormanip",		a3shader_fragment,	1,{ fragmentLines[7] } } },
+			{ { { 0 },	"shdr-fs:draw-tex-coordmanip",		a3shader_fragment,	1,{ fragmentLines[8] } } },
+			{ { { 0 },	"shdr-fs:draw-Lambert-multi-mrt",	a3shader_fragment,	1,{ fragmentLines[9] } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-multi-mrt",		a3shader_fragment,	1,{ fragmentLines[10] } } },
+			{ { { 0 },	"shdr-fs:draw-nonphoto-multi-mrt",	a3shader_fragment,	1,{ fragmentLines[11] } } },
 			// 04-multipass
-			{ { { 0 },	"shdr-fs:draw-tex-outline",			a3shader_fragment,	1,{ A3_DEMO_FS"04-multipass/e/drawTexture_outline_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi-shadow",	a3shader_fragment,	1,{ A3_DEMO_FS"04-multipass/e/drawPhong_multi_shadow_mrt_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-tex-outline",			a3shader_fragment,	1,{ fragmentLines[12] } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-multi-shadow",	a3shader_fragment,	1,{ fragmentLines[13] } } },
 			// 05-bloom
-			{ { { 0 },	"shdr-fs:draw-tex-bright",			a3shader_fragment,	1,{ A3_DEMO_FS"05-bloom/e/drawTexture_brightPass_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-tex-blur",			a3shader_fragment,	1,{ A3_DEMO_FS"05-bloom/e/drawTexture_blurGaussian_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-tex-blend4",			a3shader_fragment,	1,{ A3_DEMO_FS"05-bloom/e/drawTexture_blendScreen4_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-tex-bright",			a3shader_fragment,	1,{ fragmentLines[14] } } },
+			{ { { 0 },	"shdr-fs:draw-tex-blur",			a3shader_fragment,	1,{ fragmentLines[15] } } },
+			{ { { 0 },	"shdr-fs:draw-tex-blend4",			a3shader_fragment,	1,{ fragmentLines[16] } } },
 			// 06-deferred
-			{ { { 0 },	"shdr-fs:draw-lightingdata",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawLightingData_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi-def",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhong_multi_deferred_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-volume",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhongVolume_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-composite",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhongComposite_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-lightingdata",		a3shader_fragment,	1,{ fragmentLines[17] } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-multi-def",		a3shader_fragment,	1,{ fragmentLines[18] } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-volume",		a3shader_fragment,	1,{ fragmentLines[19] } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-composite",		a3shader_fragment,	1,{ fragmentLines[20] } } },
 			// 07-curves
-			{ { { 0 },	"shdr-fs:draw-Phong-mul-fwd-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"07-curves/drawPhong_multi_forward_mrt_fs4x.glsl" } } },
+			{ { { 0 },	"shdr-fs:draw-Phong-mul-fwd-mrt",	a3shader_fragment,	1,{ fragmentLines[21] } } },
 		}
 	};
 	a3_DemoStateShader *const shaderListPtr = (a3_DemoStateShader *)(&shaderList), *shaderPtr;

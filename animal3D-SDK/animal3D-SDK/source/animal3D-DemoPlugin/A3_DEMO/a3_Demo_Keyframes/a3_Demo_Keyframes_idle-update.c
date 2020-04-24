@@ -174,13 +174,13 @@ void a3keyframes_update(a3_DemoState* demoState, a3_Demo_Keyframes* demoMode, a3
 
 	for (unsigned int i = 0; i < currentHierarchy->numNodes; i++)
 	{
-		a3real4Bezier1(currentHierarchyState->localPose->nodePose[i].translation.v,
+		a3real4Lerp(currentHierarchyState->localPose->nodePose[i].translation.v,
 			(currentHierarchyPoseGroup->pose + 0)->nodePose[i].translation.v,
 			(currentHierarchyPoseGroup->pose + 1)->nodePose[i].translation.v, demoState->segmentParam);
-		a3real4Bezier1(currentHierarchyState->localPose->nodePose[i].orientation.v,
+		a3real4Lerp(currentHierarchyState->localPose->nodePose[i].orientation.v,
 			(currentHierarchyPoseGroup->pose + 0)->nodePose[i].orientation.v,
 			(currentHierarchyPoseGroup->pose + 1)->nodePose[i].orientation.v, demoState->segmentParam);
-		a3real4Bezier1(currentHierarchyState->localPose->nodePose[i].scale.v,
+		a3real4Lerp(currentHierarchyState->localPose->nodePose[i].scale.v,
 			(currentHierarchyPoseGroup->pose + 0)->nodePose[i].scale.v,
 			(currentHierarchyPoseGroup->pose + 1)->nodePose[i].scale.v, demoState->segmentParam);
 	}
