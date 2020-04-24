@@ -417,24 +417,28 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 void a3demo_loadShaders(a3_DemoState *demoState)
 {
 	char line[RSIZ][LSIZ];
+	char vertexLines[RSIZ][LSIZ];
 	//char fname[50];
 	FILE* fptr = NULL;
-	int i4 = 0;
+	int vertexShaderCount = 0;
 	int tot = 0;
 	printf("\n\n Read the file and store the lines into an array :\n");
 	printf("------------------------------------------------------\n");
 	printf(" Input the filename to be opened : ");
 	//scanf("%s", fname);
-	fptr = fopen("../../../../resource/ShaderList.txt", "r");
-	while (fgets(line[i4], LSIZ, fptr))
+	fptr = fopen("../../../../resource/VertexShaderList.txt", "r");
+	while (fgets(line[vertexShaderCount], LSIZ, fptr))
 	{
-		line[i4][strlen(line[i4]) - 1] = '\0';
-		i4++;
+		strcpy(vertexLines[vertexShaderCount], "../../../../resource/glsl/4x/vs/");
+		strcat(vertexLines[vertexShaderCount], line[vertexShaderCount]);
+		strtok(vertexLines[vertexShaderCount], "\n");
+		line[vertexShaderCount][strlen(line[vertexShaderCount]) - 1] = '\0';
+		vertexShaderCount++;
 	}
-	tot = i4;
+	tot = vertexShaderCount;
 	for (int i5 = 0; i5 < tot; ++i5)
 	{
-		printf(" %s\n", line[i5]);
+		printf(" %s\n", vertexLines[i5]);
 	}
 	// direct to demo programs
 	a3_DemoStateShaderProgram *currentDemoProg;
@@ -544,25 +548,25 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			
 			// vs
 			// base
-			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ A3_DEMO_VS,line[1] } } },
-			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ vertexLines[0] } } },
+			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ vertexLines[1] } } },
+			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ vertexLines[2] } } },
+			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ vertexLines[3] } } },
+			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ vertexLines[4] } } },
 			// 02-shading
-			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/e/passTexcoord_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-light-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/e/passLightingData_transform_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ vertexLines[5] } } },
+			{ { { 0 },	"shdr-vs:pass-light-trans",			a3shader_vertex  ,	1,{ vertexLines[6] } } },
 			// 04-multipass
-			{ { { 0 },	"shdr-vs:pass-light-shadow-trans",	a3shader_vertex  ,	1,{ A3_DEMO_VS"04-multipass/e/passLightingData_shadowCoord_transform_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-light-shadow-trans",	a3shader_vertex  ,	1,{ vertexLines[7] } } },
 			// 06-deferred
-			{ { { 0 },	"shdr-vs:pass-atlas-tex-trans",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passAtlasTexcoord_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-light-trans-bias",	a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passLightingData_transform_bias_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passBiasedClipCoord_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-atlas-tex-trans",		a3shader_vertex  ,	1,{ vertexLines[8] } } },
+			{ { { 0 },	"shdr-vs:pass-light-trans-bias",	a3shader_vertex  ,	1,{ vertexLines[9] } } },
+			{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ vertexLines[10] } } },
 			// 07-curves
-			{ { { 0 },	"shdr-vs:pass-tangent-trans-inst",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-curves/passTangentBasis_transform_instanced_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-tangent-trans-inst",	a3shader_vertex  ,	1,{ vertexLines[11] } } },
 			// 07-keyframes
-			{ { { 0 },	"shdr-vs:pass-col-hierarchy-t-i",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/passColor_hierarchy_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-tb-trans-morph",		a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/passTangentBasis_transform_instanced_morph_vs4x.glsl" } } },
+			{ { { 0 },	"shdr-vs:pass-col-hierarchy-t-i",	a3shader_vertex  ,	1,{ vertexLines[12] } } },
+			{ { { 0 },	"shdr-vs:pass-tb-trans-morph",		a3shader_vertex  ,	1,{ vertexLines[13] } } },
 
 			// gs
 			// 07-curves
