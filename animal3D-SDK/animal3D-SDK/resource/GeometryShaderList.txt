@@ -1,2 +1,2 @@
-drawCurveSegment_gs4x.glsl
-drawOverlays_tangents_wireframe_gs4x.glsl
+07-curves/drawCurveSegment_gs4x.glsl
+07-curves/drawOverlays_tangents_wireframe_gs4x.glsl
