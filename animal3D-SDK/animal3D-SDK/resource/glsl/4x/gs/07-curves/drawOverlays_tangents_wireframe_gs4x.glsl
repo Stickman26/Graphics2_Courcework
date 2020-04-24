@@ -45,10 +45,12 @@
 layout (triangles) in;
 
 // (4)
-layout (line_strip, max_vertices = MAX_VERTICES) out;
+layout (triangle_strip, max_vertices = MAX_VERTICES) out;
 
 // (3)
 uniform mat4 uP;
+uniform double uTime;
+uniform sampler2D uTex_dm;
 
 // (2)
 in vbVertexData {
@@ -60,8 +62,24 @@ in vbVertexData {
 // (5)
 out vec4 vColor;
 
-// (6)
+out vec4 vTexCoord;
 
+// (6)
+in vec4 viewSpace[];
+
+vec4 explosion(vec4 pos, vec3 norm)
+{
+	float magnitude = 2.0;
+	vec3 direction = norm * ((sin(float(uTime)) - 0.25) * 0.5) * magnitude;
+	return pos + vec4(direction, 0.0);
+}
+
+vec3 GetNormal()
+{
+	vec3 a = vec3(gl_in[0].gl_Position) - vec3(gl_in[1].gl_Position);
+	vec3 b = vec3(gl_in[1].gl_Position) - vec3(gl_in[2].gl_Position);
+	return normalize(cross(a, b));
+}
 
 // (7)
 void drawWireFrame()
@@ -78,7 +96,27 @@ void drawWireFrame()
 	EndPrimitive();
 }
 
+void CauseExplosion()
+{
+	vec3 normal = GetNormal();
+
+	vColor = texture(uTex_dm, vVertexData[0].vTexcoord_atlas.xy);
+
+	gl_Position = uP * explosion(viewSpace[0], normal);
+	vTexCoord = vVertexData[0].vTexcoord_atlas;
+	EmitVertex();
+	gl_Position = uP * explosion(viewSpace[1], normal);
+	vTexCoord = vVertexData[1].vTexcoord_atlas;
+	EmitVertex();
+	gl_Position = uP * explosion(viewSpace[2], normal);
+	vTexCoord = vVertexData[2].vTexcoord_atlas;
+	EmitVertex();
+
+	EndPrimitive();
+}
+
 void main()
 {
-	drawWireFrame();
+	//drawWireFrame();
+	CauseExplosion();
 }

@@ -62,6 +62,30 @@ out vbVertexData {
 out vec3 reflectedVector; //direction of the reflected ray
 out vec3 rayOrigin; //origin point of reflected ray
 
+//Doing Cool Things
+const float waveLength = 3.0;
+const float waveAmp = 0.9;
+const float PI = 3.14159;
+
+uniform double uTime;
+
+float generateOffset(float x, float z)
+{
+	float radiansX = (x / waveLength) * 2.0 * PI;
+	float radiansZ = (z / waveLength) * 2.0 * PI;
+	return waveAmp * 0.5 * (sin(radiansZ + (float(uTime))) + cos(radiansX + (float(uTime))));
+}
+
+vec3 applyDistortion(vec3 vertex)
+{
+	float xDistort = generateOffset(vertex.x, vertex.y);
+	float yDistort = generateOffset(vertex.y, vertex.z);
+	float zDistort = generateOffset(vertex.z, vertex.x);
+	return vertex + vec3(xDistort, yDistort, zDistort);
+}
+
+out vec4 viewSpace;
+
 void main()
 {
 	vVertexID = gl_VertexID;
@@ -76,8 +100,15 @@ void main()
 	vTangentBasis_view[3] = t.modelViewMat * aPosition;
 	gl_Position = t.modelViewProjectionMat * aPosition;
 
+	//Doing Cool Stuff
+	vec3 currentVertex = vec3(aPosition.x, aPosition.y, aPosition.z);
+	currentVertex = applyDistortion(currentVertex);
+	viewSpace = t.modelViewMat * vec4(currentVertex, 1.0);
+
 	rayOrigin = (t.modelViewProjectionMat * aPosition).xyz;
 	vec3 viewVector = normalize(aPosition.xyz - rayOrigin);
 	vec4 normNormal = normalize(t.modelViewNormalMat * aNormal);
 	reflectedVector = reflect(viewVector, normNormal.xyz).xyz;
+
+	
 }

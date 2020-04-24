@@ -28,6 +28,11 @@
 //	1) declare varying to receive input vertex color from vertex shader
 //	2) assign vertex color to output color
 
+uniform sampler2D uTex_dm;
+uniform double uTime;
+
+in vec4 vTexCoord;
+
 in vec4 vColor;	// (1)
 
 layout (location = 0) out vec4 rtFragColor;

@@ -818,6 +818,8 @@ void a3keyframes_render(a3_DemoState const* demoState, a3_Demo_Keyframes const* 
 			// overlay flag
 			a3shaderUniformSendInt(a3unif_single, currentDemoProgram->uFlag, 1, flag);
 
+			a3shaderUniformSendDouble(a3unif_single, currentDemoProgram->uTime, 1, &demoState->renderTimer->totalTime);
+
 			// draw objects again
 			for (currentSceneObject = demoState->planeObject, endSceneObject = demoState->teapotObject,
 				j = (a3ui32)(currentSceneObject - demoState->sceneObject), k = 0;
